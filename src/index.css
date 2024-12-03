@@ -1,0 +1,69 @@
+/* src/index.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'myriadpro';
+  src: url(/assets/fonts/myriadpro_regular.otf);
+}
+
+@font-face {
+  font-family: 'myriadpro_bold';
+  src: url(/assets/fonts/myriadpro_bold.otf);
+}
+
+@font-face {
+  font-family: 'myriadpro_light';
+  src: url(/assets/fonts/myriadpro_light.otf);
+}
+
+
+body {
+  margin: 0;
+  font-family: myriadpro_bold;
+  background-color: #000000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #999999 #494b52;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #494b52;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ffda84;
+  border-radius: 10px;
+  border: 3px solid #494b52;
+}
+
+.do-thing {
+  animation: scaleUpLeft 2s ease-in-out infinite;
+}
+
+@keyframes scaleUpLeft {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(2);
+    /* Scale up by 2x */
+    /* Automatically moves left due to bottom-right anchor */
+  }
+}
