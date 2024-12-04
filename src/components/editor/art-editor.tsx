@@ -1,7 +1,13 @@
+"use client";
+
+import RealmTrees from "@/../public/images/background.png";
+import Icons from "@/../public/images/icons.png"
+
 import { ModalProvider } from "@/context/modal-context";
-import RealmTrees from "../../../public/images/background.png";
 import ScrollingBackground from "./scrolling-background";
+import ImageButton from "../generic/image-button";
 import WelcomeModal from "./editor-modals";
+import { useEditor } from "@/context/art-editor-context";
 
 type ArtEditorProps = {
     className?: string
@@ -10,19 +16,29 @@ type ArtEditorProps = {
 export default function ArtEditor({
     className
 }: ArtEditorProps) {
+    const { isMusicMuted, setMusicMuted } = useEditor();
+
     return (
         <div
             className={`max-w-[880px] max-h-[700px] aspect-[880/700] w-full block overflow-hidden relative ${className || ""}`}
         >
-            <div className="z-20">
-                <ModalProvider>
-                    {/* Every openable modal is contained in here */}
-                    {/* Only opened modals are rendered */}
-                    <div className="w-full h-full absolute z-20">
-                        <WelcomeModal />
-                    </div>
-                </ModalProvider>
+            <div className="absolute flex flex-col w-full z-30 p-1">
+                <ImageButton
+                    totalSpritesX={5}
+                    offset={isMusicMuted ? 1 : 0}
+                    scale={2}
+                    image={Icons}
+                    onClick={() => setMusicMuted(!isMusicMuted)}
+                />
             </div>
+
+            <ModalProvider>
+                {/* Every openable modal is contained in here */}
+                {/* Only opened modals are rendered */}
+                <div className="w-full h-full absolute z-20">
+                    <WelcomeModal />
+                </div>
+            </ModalProvider>
 
             <ScrollingBackground scale={4} image={RealmTrees} />
         </div>

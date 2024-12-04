@@ -5,10 +5,10 @@ export default function WelcomeModal() {
     return (
         <Modal
             name="WelcomeModal"
-            className="w-[46%] h-[55%]"
+            className="w-[400px] h-[240px]"
         >
             <ModalHeader>
-                Welcome!
+                Welcome
             </ModalHeader>
 
             <ModalBody>
@@ -16,20 +16,22 @@ export default function WelcomeModal() {
                     Welcome to RealmSpriter. By clicking 'Enter', you are indicating
                     that you have read and agreed to the Terms of Use and Privacy Policy.
                 </p>
-                <Link
-                    target="_blank"
-                    href="/legal/terms-of-use/"
-                    className="no-underline text-[#5d56bd]"
-                >
-                    Terms of Use
-                </Link>
-                <Link
-                    target="_blank"
-                    href="/legal/privacy-policy/"
-                    className="no-underline text-[#5d56bd]"
-                >
-                    Privacy Policy
-                </Link>
+                <div className="flex flex-row items-center justify-center font-normal text-base">
+                    <Link
+                        target="_blank"
+                        href="/legal/terms-of-use/"
+                        className="no-underline text-[#5d56bd] mx-4"
+                    >
+                        Terms of Use
+                    </Link>
+                    <Link
+                        target="_blank"
+                        href="/legal/privacy-policy/"
+                        className="no-underline text-[#5d56bd]"
+                    >
+                        Privacy Policy
+                    </Link>
+                </div>
             </ModalBody>
 
             <ModalFooter>

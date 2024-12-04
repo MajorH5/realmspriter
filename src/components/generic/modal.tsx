@@ -15,7 +15,7 @@ export const ModalHeader = ({
     return (
         <div
             className={`
-                text-xl text-center
+                text-2xl text-center
                 text-[#578763] font-bold
                 ${className || ""}`}
         >
@@ -30,9 +30,10 @@ export const ModalBody = ({
     return (
         <div
             className={`
-                text-[#bbbbbb] 
+                text-[#bbbbbb] font-light
+                text-lg
                 ${className || ""}`}
-            >
+        >
             {children}
         </div>
     );
@@ -70,8 +71,10 @@ export const Modal = ({
     if (activeModal !== name) return null;
 
     return (
-        <div
-            className={`
+        <div className="flex flex-col items-center justify-center w-full h-full bg-[#222222]">
+
+            <div
+                className={`
                 flex flex-col space-y-4
                 items-center justify-center
                 min-w-[50px] min-h-[50px]
@@ -80,11 +83,12 @@ export const Modal = ({
                 p-4 font-myriadpro shadow-2xl
                 ${className || ""}`}
 
-            style={{
-                textShadow: '0px 0px 10px black'
-            }}
-        >
-            {children}
+                style={{
+                    textShadow: '0px 0px 10px black'
+                }}
+            >
+                {children}
+            </div>
         </div>
     );
 };

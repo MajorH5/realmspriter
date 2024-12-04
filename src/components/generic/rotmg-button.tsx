@@ -10,7 +10,16 @@ export default function RotMGButton({
     className
 }: RotMGButtonProps) {
     return (
-        <button className={`bg-white py-1 px-8 text-[#363636] rounded-lg font-bold ${className || ""}`} onClick={onClick}>
+        <button
+            className={`
+                bg-white py-1 px-8 text-[#363636]
+                rounded-lg font-bold
+                hover:bg-[#ffda84]
+                disabled:bg-[#4f4f4f]
+                text-lg
+                ${className || ""}`}
+            onClick={onClick}
+        >
             {children}
         </button>
     );

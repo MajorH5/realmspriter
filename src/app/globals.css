@@ -17,7 +17,7 @@
 @font-face {
   font-family: 'myriadpro';
   src: url(/fonts/myriadpro-light.otf);
-  /* font-weight: 300; */
+  font-weight: 300;
 }
 
 body {

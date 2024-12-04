@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        myriadpro: ['myriadpro']
+        myriadpro: ['myriadpro', 'sans-serif']
       },
 
       dropShadow: {
