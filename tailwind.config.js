@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        myriadpro: ['myriadpro']
+      },
+
       dropShadow: {
         'lg': '0 0 2px rgba(0, 0, 0, 1)',
       }

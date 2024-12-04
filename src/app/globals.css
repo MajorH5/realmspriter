@@ -4,20 +4,20 @@
 
 @font-face {
   font-family: 'myriadpro';
-  src: url(/assets/fonts/myriadpro-regular.otf);
+  src: url(/fonts/myriadpro-regular.otf);
   font-weight: normal;
 }
 
 @font-face {
   font-family: 'myriadpro';
-  src: url(/assets/fonts/myriadpro-bold.otf);
+  src: url(/fonts/myriadpro-bold.otf);
   font-weight: bold;
 }
 
 @font-face {
   font-family: 'myriadpro';
-  src: url(/assets/fonts/myriadpro-light.otf);
-  font-weight: 300;
+  src: url(/fonts/myriadpro-light.otf);
+  /* font-weight: 300; */
 }
 
 body {

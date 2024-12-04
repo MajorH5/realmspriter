@@ -1,5 +1,5 @@
-import ArtEditor from "@/components/art-editor";
-import Footer from "@/components/footer";
+import ArtEditor from "@/components/editor/art-editor";
+import Footer from "@/components/generic/footer";
 import { ArtEditorProvider } from "@/context/art-editor-context";
 
 export default function RealmSpriter() {
