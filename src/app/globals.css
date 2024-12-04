@@ -1,36 +1,36 @@
-/* src/index.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
   font-family: 'myriadpro';
-  src: url(/assets/fonts/myriadpro_regular.otf);
+  src: url(/assets/fonts/myriadpro-regular.otf);
+  font-weight: normal;
 }
 
 @font-face {
-  font-family: 'myriadpro_bold';
-  src: url(/assets/fonts/myriadpro_bold.otf);
+  font-family: 'myriadpro';
+  src: url(/assets/fonts/myriadpro-bold.otf);
+  font-weight: bold;
 }
 
 @font-face {
-  font-family: 'myriadpro_light';
-  src: url(/assets/fonts/myriadpro_light.otf);
+  font-family: 'myriadpro';
+  src: url(/assets/fonts/myriadpro-light.otf);
+  font-weight: 300;
 }
-
 
 body {
   margin: 0;
   font-family: myriadpro_bold;
-  background-color: #000000;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+a {
+  /* undo tailwind styles */
+  color: revert;
+  text-decoration: revert;
 }
 
 * {
@@ -52,18 +52,16 @@ code {
   border: 3px solid #494b52;
 }
 
-.do-thing {
-  animation: scaleUpLeft 2s ease-in-out infinite;
+.image-marquee {
+  animation: scaleUpLeft 30s linear infinite;
 }
 
 @keyframes scaleUpLeft {
   0% {
-    transform: scale(1);
+    translate: 0px 0px;
   }
 
   100% {
-    transform: scale(2);
-    /* Scale up by 2x */
-    /* Automatically moves left due to bottom-right anchor */
+    translate: -50% -50%;
   }
 }
