@@ -53,7 +53,7 @@ a {
 }
 
 .image-marquee {
-  animation: scaleUpLeft 30s linear infinite;
+  animation: scaleUpLeft 40s linear infinite;
 }
 
 @keyframes scaleUpLeft {

@@ -1,3 +1,4 @@
 export type OnScreenModal =
     "WelcomeModal" | "DisclaimerModal" |
-    "CurrentAccountModal" | "ChangePasswordModal";
+    "CurrentAccountModal" | "ChangePasswordModal" |
+    "NotificationsModal" | "PatchNotesModal";

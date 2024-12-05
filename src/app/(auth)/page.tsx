@@ -1,6 +1,7 @@
 import ArtEditor from "@/components/editor/art-editor";
 import Footer from "@/components/generic/footer";
 import { ArtEditorProvider } from "@/context/art-editor-context";
+import { ModalProvider } from "@/context/modal-context";
 
 export default function RealmSpriter() {
     return (
@@ -9,7 +10,9 @@ export default function RealmSpriter() {
         >
             <div className="flex items-center justify-center">
                 <ArtEditorProvider>
-                    <ArtEditor />
+                    <ModalProvider>
+                        <ArtEditor />
+                    </ModalProvider>
                 </ArtEditorProvider>
             </div>
 

@@ -14,7 +14,7 @@ export default function CurrentAccountModal() {
         <Modal
             name="CurrentAccountModal"
             backgroundColor="black"
-            className=" p-0 border-[1px] w-[400px] h-[315px] overflow-hidden"
+            className="!p-0 border-[1px] w-[400px] h-[315px] overflow-hidden"
         >
             <ModalHeader className="bg-[#4D4D4D] shadow-md w-full">
                 <p className="text-left pl-[10px] py-3 text-base font-light text-[#B5B5B5]">
@@ -36,7 +36,7 @@ export default function CurrentAccountModal() {
             </ModalBody>
 
             <ModalFooter className="!mt-auto w-full text-end">
-                <ModalTrigger className="bg-[rgba(0,0,0,0)] hover:bg-[rgba(0,0,0,0)] !p-0 m-4">
+                <ModalTrigger className="!bg-[rgba(0,0,0,0)] hover:bg-[rgba(0,0,0,0)] !p-0 m-4">
                     <p className="text-white text-2xl hover:text-[#ffda84]">Continue</p>
                 </ModalTrigger>
             </ModalFooter>
