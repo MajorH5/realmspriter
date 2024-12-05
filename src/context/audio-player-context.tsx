@@ -19,7 +19,7 @@ export type AudioPlayerType = {
   preloadAll: (
     sounds: AudioSourceType[],
     callback: (loaded: number, total: number) => void
-  ) => Promise<void[]>;
+  ) => Promise<void[] | undefined>;
 
   playSfx: (
     audioSource: AudioSourceType,
@@ -207,25 +207,40 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
     }
   };
 
+  const toggleAudioObjects = (predicate: (sound: AudioObject) => boolean, shouldMute: boolean) => {
+    activeSounds.filter(predicate).forEach((sound) => {
+        if (shouldMute) {
+            sound.mute();
+        } else {
+            sound.unmute();
+        }
+    });
+}
+
   const suspendActiveObjects = () => {
     setCurrentTheme(null);
     activeSounds.forEach((sound) => sound.pause());
   };
 
+  // TODO: reduce confusing boolean logic
   const muteSfx = () => {
     setUserSfxEnabled(false);
+    toggleAudioObjects((sound) => sound.isSfx(), true);
   };
-
+  
   const unmuteSfx = () => {
     setUserSfxEnabled(true);
+    toggleAudioObjects((sound) => sound.isSfx(), false);
   };
 
   const muteMusic = () => {
     setUserMusicEnabled(false);
+    toggleAudioObjects((sound) => !sound.isSfx(), true);
   };
-
+  
   const unmuteMusic = () => {
     setUserMusicEnabled(true);
+    toggleAudioObjects((sound) => !sound.isSfx(), false);
   };
 
   return (

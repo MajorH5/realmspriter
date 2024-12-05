@@ -1,14 +1,21 @@
+import { useAudioPlayer } from "@/context/audio-player-context";
+import { ButtonClickSfx } from "@/resources/audio";
+
 type RotMGButtonProps = {
     onClick?: () => void;
+    playClickSfx?: boolean;
     children?: React.ReactNode;
     className?: string;
 }
 
 export default function RotMGButton({
     onClick,
+    playClickSfx = true,
     children,
-    className,
+    className
 }: RotMGButtonProps) {
+    const { playSfx  } = useAudioPlayer();
+
     return (
         <button
             className={`
@@ -18,7 +25,15 @@ export default function RotMGButton({
                 disabled:bg-[#4f4f4f]
                 text-lg
                 ${className || ""}`}
-            onClick={onClick}
+            onClick={() => {
+                if (playClickSfx) {
+                    playSfx(ButtonClickSfx);
+                }
+
+                if (onClick !== undefined) {
+                    onClick();
+                };
+            }}
         >
             {children}
         </button>

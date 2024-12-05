@@ -10,6 +10,14 @@ type ArtEditorProps = {
     className?: string
 }
 
+export function Loading () {
+    return (
+        <div className="max-w-[880px] max-h-[700px] aspect-[880/700] w-full flex flex-col justify-center">
+            <p className="text-center">Loading</p>
+        </div>
+    );
+}
+
 export default function ArtEditor({
     className
 }: ArtEditorProps) {
