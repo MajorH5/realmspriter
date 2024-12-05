@@ -100,9 +100,6 @@ All discussions and updates happen right here on GitHub, so feel free to comment
 
 ## License  
 
-This project is licensed under the [Creative Commons Attribution 4.0 International License](LICENSE).
-
-You are free to share and adapt the work, as long as proper credit is given.  
-
+This project is licensed under the [MIT License](LICENSE), and you are free to share and adapt the work.
 
 
