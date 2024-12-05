@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: { unoptimized: true },
-    output: 'export', // Outputs a Single-Page Application (SPA).
-    distDir: './build', // Changes the build output directory to `./dist`.
+    output: 'export',
+    distDir: './build',
 }
 
 export default nextConfig
