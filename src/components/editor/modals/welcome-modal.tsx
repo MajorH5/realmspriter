@@ -1,7 +1,17 @@
-import { Modal, ModalBody, ModalFooter, ModalHeader, ModalTrigger } from "../generic/modal";
+import { useModal } from "@/context/modal-context";
+import {
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    ModalTrigger
+} from "../../generic/modal";
+
 import Link from "next/link";
 
 export default function WelcomeModal() {
+    const { openModal } = useModal();
+
     return (
         <Modal
             name="WelcomeModal"
@@ -35,7 +45,7 @@ export default function WelcomeModal() {
             </ModalBody>
 
             <ModalFooter>
-                <ModalTrigger>
+                <ModalTrigger onClick={() => openModal("DisclaimerModal")}>
                     Enter
                 </ModalTrigger>
             </ModalFooter>

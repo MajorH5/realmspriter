@@ -6,8 +6,13 @@ import Icons from "@/../public/images/icons.png"
 import { ModalProvider } from "@/context/modal-context";
 import ScrollingBackground from "./scrolling-background";
 import ImageButton from "../generic/image-button";
-import WelcomeModal from "./editor-modals";
 import { useEditor } from "@/context/art-editor-context";
+
+import {
+    WelcomeModal,
+    DisclaimerModal,
+    CurrentAccountModal
+} from "./modals/editor-modals";
 
 type ArtEditorProps = {
     className?: string
@@ -24,6 +29,7 @@ export default function ArtEditor({
         >
             <div className="absolute flex flex-col w-full z-30 p-1">
                 <ImageButton
+                title={isMusicMuted ? "Unmute music" : "Mute music"}
                     totalSpritesX={5}
                     offset={isMusicMuted ? 1 : 0}
                     scale={2}
@@ -37,6 +43,8 @@ export default function ArtEditor({
                 {/* Only opened modals are rendered */}
                 <div className="w-full h-full absolute z-20">
                     <WelcomeModal />
+                    <DisclaimerModal />
+                    <CurrentAccountModal />
                 </div>
             </ModalProvider>
 

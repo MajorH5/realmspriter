@@ -50,12 +50,28 @@ export const ModalFooter = ({
 };
 
 export const ModalTrigger = ({
-    children, className
-}: GenericModalProps) => {
+    children, className,
+    onClick
+}: GenericModalProps & {
+    onClick?: () => void
+}) => {
     const { closeModal } = useModal();
 
     return (
-        <RotMGButton className={className} onClick={closeModal} >
+        <RotMGButton className={className} onClick={
+            () => {
+                /*
+                    TODO: closing, then calling onClick is backwards
+                    but allows opening another modal within onClick without
+                    imediately closing itself; find better method
+                */
+                closeModal();
+
+                if (onClick !== undefined) {
+                    onClick();
+                }
+            }
+        } >
             {children}
         </RotMGButton>
     );
@@ -64,15 +80,23 @@ export const ModalTrigger = ({
 export const Modal = ({
     name,
     children,
-    className
-}: GenericModalProps & { name: OnScreenModal }) => {
+    className,
+    backgroundColor
+}: GenericModalProps & {
+    name: OnScreenModal,
+    backgroundColor?: string
+}) => {
     const { activeModal } = useModal();
 
     if (activeModal !== name) return null;
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full bg-[#222222]">
-
+        <div
+            className="flex flex-col items-center justify-center w-full h-full"
+            style={{
+                backgroundColor: backgroundColor || "#222222"
+            }}
+        >
             <div
                 className={`
                 flex flex-col space-y-4

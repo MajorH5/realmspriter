@@ -4,6 +4,7 @@ type ImageButtonProps = {
     onClick?: () => void;
     image: StaticImageData;
     scale?: number;
+    title: string;
     size?: number;
     offset?: number;
     totalSpritesX?: number;
@@ -13,6 +14,7 @@ export default function ImageButton({
     onClick,
     image,
     scale,
+    title,
     size = 16,
     offset = 0,
     totalSpritesX = 1
@@ -22,6 +24,7 @@ export default function ImageButton({
 
     return (
         <button
+            title={title}
             onClick={onClick}
             style={{
                 imageRendering: 'pixelated',

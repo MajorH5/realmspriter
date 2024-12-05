@@ -1,13 +1,13 @@
 type RotMGButtonProps = {
     onClick?: () => void;
     children?: React.ReactNode;
-    className?: string
+    className?: string;
 }
 
 export default function RotMGButton({
     onClick,
     children,
-    className
+    className,
 }: RotMGButtonProps) {
     return (
         <button
