@@ -1,12 +1,14 @@
-import { Icons } from "@/resources/images"
+"use client"
+import { Icons } from "@/resources/images";
 
 import { useModal } from "@/context/modal-context";
 import { useEditor } from "@/context/art-editor-context";
 
 import ImageButton from "../generic/image-button";
+import { useAudioPlayer } from "@/context/audio-player-context";
 
 export default function EditorTopBar() {
-    const { isMusicMuted, setMusicMuted } = useEditor();
+    const { userMusicEnabled, muteMusic, unmuteMusic } = useAudioPlayer();
     const { activeModal, toggleModal } = useModal();
 
     const shouldRenderToolbarButtons = !activeModal ||
@@ -16,12 +18,20 @@ export default function EditorTopBar() {
     return (
         <div className="absolute flex flex-row w-full z-30 p-1 space-x-6">
             <ImageButton
-                title={isMusicMuted ? "Unmute music" : "Mute music"}
+                title={userMusicEnabled ? "Mute music" : "Unmute music"}
                 totalSpritesX={5}
-                offset={isMusicMuted ? 1 : 0}
+                offset={userMusicEnabled ? 0 : 1}
                 scale={2}
                 image={Icons}
-                onClick={() => setMusicMuted(!isMusicMuted)}
+                onClick={
+                    () => {
+                        if (userMusicEnabled) {
+                            muteMusic();
+                        } else {
+                            unmuteMusic();
+                        }
+                    }
+                }
             />
             {shouldRenderToolbarButtons &&
                 <>

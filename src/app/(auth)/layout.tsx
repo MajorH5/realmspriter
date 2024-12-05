@@ -2,7 +2,7 @@
 
 import { AuthProvider } from "@/context/auth-context";
 
-export default function Authenticated({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
     return (
         <>
             <AuthProvider>

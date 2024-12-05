@@ -1,6 +1,7 @@
 import ArtEditor from "@/components/editor/art-editor";
 import Footer from "@/components/generic/footer";
 import { ArtEditorProvider } from "@/context/art-editor-context";
+import { AudioPlayerProvider } from "@/context/audio-player-context";
 import { ModalProvider } from "@/context/modal-context";
 
 export default function RealmSpriter() {
@@ -9,11 +10,13 @@ export default function RealmSpriter() {
             className="flex flex-col min-h-screen overflow-x-hidden bg-black text-white"
         >
             <div className="flex items-center justify-center">
-                <ArtEditorProvider>
-                    <ModalProvider>
-                        <ArtEditor />
-                    </ModalProvider>
-                </ArtEditorProvider>
+                <AudioPlayerProvider>
+                    <ArtEditorProvider>
+                        <ModalProvider>
+                            <ArtEditor />
+                        </ModalProvider>
+                    </ArtEditorProvider>
+                </AudioPlayerProvider>
             </div>
 
             <p className="text-center m-4">
