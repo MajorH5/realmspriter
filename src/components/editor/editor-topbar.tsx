@@ -1,15 +1,18 @@
 "use client"
 import { Icons } from "@/resources/images";
 
-import { useModal } from "@/context/modal-context";
+import { useAudioPlayer } from "@/context/audio-player-context";
 import { useEditor } from "@/context/art-editor-context";
+import { useModal } from "@/context/modal-context";
+import { useAuth } from "@/context/auth-context";
 
 import ImageButton from "../generic/image-button";
-import { useAudioPlayer } from "@/context/audio-player-context";
+import RotMGButton from "../generic/rotmg-button";
 
 export default function EditorTopBar() {
     const { userMusicEnabled, muteMusic, unmuteMusic } = useAudioPlayer();
-    const { activeModal, toggleModal } = useModal();
+    const { activeModal, toggleModal, openModal } = useModal();
+    const { user } = useAuth();
 
     const shouldRenderToolbarButtons = !activeModal ||
         activeModal === "NotificationsModal" ||
@@ -52,6 +55,22 @@ export default function EditorTopBar() {
                         onClick={() => toggleModal("PatchNotesModal")}
                     />
                 </>
+            }
+            {(!activeModal || shouldRenderToolbarButtons) &&
+                <div className="flex flex-row justify-end items-end w-full font-myriadpro px-2 space-x-2">
+                    <span className="text-[#cccccc] opacity-50 text-lg">logged in as {user?.email} - </span>
+                    <RotMGButton
+                        className="!p-0 !bg-[rgba(0,0,0,0)] text-white hover:text-[#ffff00]"
+                        onClick={() => openModal("CurrentAccountModal")}
+                    >
+                        account
+                    </RotMGButton>
+                    <RotMGButton
+                        className="!p-0 !bg-[rgba(0,0,0,0)] text-white hover:text-[#ffff00]"
+                    >
+                        log out
+                    </RotMGButton>
+                </div>
             }
         </div>
     );

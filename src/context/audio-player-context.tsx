@@ -75,7 +75,9 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
       return;
     }
 
-    if (userInteracted && typeof window !== "undefined") {
+    // TODO: more graceful way of handling audiocontext construction
+    // if (userInteracted && typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       const sfxCtx = new AudioContext();
       const musicCtx = new AudioContext();
 
@@ -87,7 +89,8 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         musicCtx.close();
       };
     }
-  }, [userInteracted]);
+  // }, [userInteracted]);
+  }, []);
 
   const preloadAll = async (
     sounds: AudioSourceType[],

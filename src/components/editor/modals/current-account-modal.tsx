@@ -12,7 +12,7 @@ import { SorcMsc } from "@/resources/audio";
 
 export default function CurrentAccountModal() {
     const { user } = useAuth();
-    const { playTheme } = useAudioPlayer();
+    const { currentTheme, playTheme } = useAudioPlayer();
 
     return (
         <Modal
@@ -40,7 +40,11 @@ export default function CurrentAccountModal() {
             </ModalBody>
 
             <ModalFooter className="!mt-auto w-full text-end">
-                <ModalTrigger onClick={() => playTheme(SorcMsc)} className="!bg-[rgba(0,0,0,0)] hover:bg-[rgba(0,0,0,0)] !p-0 m-4">
+                <ModalTrigger onClick={() => {
+                    if (!currentTheme || currentTheme.getAudioSource() !== SorcMsc) {
+                        playTheme(SorcMsc);
+                    }
+                }} className="!bg-[rgba(0,0,0,0)] hover:bg-[rgba(0,0,0,0)] !p-0 m-4">
                     <p className="text-white text-2xl hover:text-[#ffda84]">Continue</p>
                 </ModalTrigger>
             </ModalFooter>
