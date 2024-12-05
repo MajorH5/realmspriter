@@ -1,4 +1,4 @@
-import Icons from "@/../public/images/icons.png"
+import { Icons } from "@/resources/images"
 
 import { useModal } from "@/context/modal-context";
 import { useEditor } from "@/context/art-editor-context";

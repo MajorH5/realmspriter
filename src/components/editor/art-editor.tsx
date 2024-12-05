@@ -1,6 +1,6 @@
 "use client";
 
-import RealmTrees from "@/../public/images/background.png";
+import { RealmTrees } from "@/resources/images";
 import ScrollingBackground from "./scrolling-background";
 
 import EditorModals from "./modals/editor-modals";
