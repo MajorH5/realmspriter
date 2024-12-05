@@ -1,5 +1,5 @@
-import RealmTrees from "@/../public/images/background.png";
-import Icons from "@/../public/images/icons.png";
+import RealmTrees from "@/../public/assets/images/background.png";
+import Icons from "@/../public/assets/images/icons.png";
 
 export {
     RealmTrees,
