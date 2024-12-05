@@ -86,9 +86,6 @@ npm run prod
 
 ---
 
-##### *Note*
-*RealmSpriter will only run in offline mode without an API to support online features.*
-
 ## Contributing  
 
 Want to help make **RealmSpriter** even better? Contributions are welcome!  
