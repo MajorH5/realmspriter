@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { Icons } from "@/resources/images";
 
 import { useAudioPlayer } from "@/context/audio-player-context";
@@ -60,7 +61,7 @@ export default function EditorTopBar() {
                         <span className="text-[#cccccc] opacity-50 text-lg">{user !== null ? `logged in as ${user.email} - ` : "guest account - "}</span>
                         <TextButton
                             className="hover:text-[#ffff00]"
-                            onClick={() => openModal("CurrentAccountModal")}
+                            onClick={() => user !== null ? openModal("CurrentAccountModal") : null}
                         >
                             {user !== null ? "account" : "register"}
                         </TextButton>
