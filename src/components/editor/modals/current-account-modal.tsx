@@ -9,10 +9,17 @@ import {
     ModalTrigger
 } from "../../generic/modal";
 import { SorcMsc } from "@/resources/audio";
+import { TextButton } from "@/components/generic/rotmg-button";
 
 export default function CurrentAccountModal() {
     const { user } = useAuth();
     const { currentTheme, playTheme } = useAudioPlayer();
+
+    const onContinue = () => {
+        if (!currentTheme || currentTheme.getAudioSource() !== SorcMsc) {
+            playTheme(SorcMsc);
+        }
+    };
 
     return (
         <Modal
@@ -40,12 +47,12 @@ export default function CurrentAccountModal() {
             </ModalBody>
 
             <ModalFooter className="!mt-auto w-full text-end">
-                <ModalTrigger onClick={() => {
-                    if (!currentTheme || currentTheme.getAudioSource() !== SorcMsc) {
-                        playTheme(SorcMsc);
-                    }
-                }} className="!bg-[rgba(0,0,0,0)] hover:bg-[rgba(0,0,0,0)] !p-0 m-4">
-                    <p className="text-white text-2xl hover:text-[#ffda84]">Continue</p>
+                <ModalTrigger
+                    onClick={onContinue}
+                    className="m-4"
+                    ButtonComponent={TextButton}
+                >
+                    <p className="text-2xl">Continue</p>
                 </ModalTrigger>
             </ModalFooter>
         </Modal>

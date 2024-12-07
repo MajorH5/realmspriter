@@ -4,7 +4,7 @@ import { User } from "@/types/user-types";
 interface AuthContextType {
     user: User | null,
     logout: () => void;
-    login: (email: string, password: string) => Promise<User>;
+    login: (email: string, password: string) => Promise<User | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

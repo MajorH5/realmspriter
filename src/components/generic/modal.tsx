@@ -1,8 +1,9 @@
 "use client";
 
 import { useModal } from "@/context/modal-context";
-import RotMGButton from "./rotmg-button";
+import { RotMGButtonProps, DefaultButton } from "./rotmg-button";
 import { OnScreenModal } from "@/types/modal-types";
+import { ButtonHTMLAttributes } from "react";
 
 type GenericModalProps = {
     children?: React.ReactNode;
@@ -50,32 +51,37 @@ export const ModalFooter = ({
 };
 
 export const ModalTrigger = ({
-    children, className,
-    onClick
+    children,
+    className,
+    onClick,
+    ButtonComponent = DefaultButton,
 }: GenericModalProps & {
-    onClick?: () => void
+    onClick?: () => void;
+    ButtonComponent?: React.FC<RotMGButtonProps>;
 }) => {
     const { closeModal } = useModal();
 
     return (
-        <RotMGButton className={className} onClick={
-            () => {
+        <ButtonComponent
+            className={className}
+            onClick={() => {
                 /*
                     TODO: closing, then calling onClick is backwards
                     but allows opening another modal within onClick without
-                    imediately closing itself; find better method
+                    immediately closing itself; find better method
                 */
                 closeModal();
 
                 if (onClick !== undefined) {
                     onClick();
                 }
-            }
-        } >
+            }}
+        >
             {children}
-        </RotMGButton>
+        </ButtonComponent>
     );
-}
+};
+
 
 export const Modal = ({
     name,

@@ -45,7 +45,7 @@ export default function WelcomeModal() {
             </ModalBody>
 
             <ModalFooter>
-                <ModalTrigger onClick={() => openModal("DisclaimerModal")}>
+                <ModalTrigger className="rotmg-button" onClick={() => openModal("DisclaimerModal")}>
                     Enter
                 </ModalTrigger>
             </ModalFooter>

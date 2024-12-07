@@ -11,4 +11,11 @@ export namespace SpriteSize {
     export const S16X16 = "16 x 16";
     export const S16X8 = "16 x 8";
     export type Type = "32 x 32" | "16 x 16" | "16 x 8" | "8 x 8";
-}
+};
+
+export namespace EditMode {
+    export const DRAW = "Draw";
+    export const ERASE = "Erase";
+    export const SAMPLE = "Sample";
+    export type Type = "Draw" | "Erase" | "Sample";
+};

@@ -1,4 +1,6 @@
-import Image, { StaticImageData } from "next/image";
+import { ButtonClickSfx } from "@/resources/audio";
+import { useAudioPlayer } from "@/context/audio-player-context";
+import { StaticImageData } from "next/image";
 
 type ImageButtonProps = {
     onClick?: () => void;
@@ -19,13 +21,20 @@ export default function ImageButton({
     offset = 0,
     totalSpritesX = 1
 }: ImageButtonProps) {
+    const { playSfx } = useAudioPlayer();
+
     const xOffset = size * (offset % totalSpritesX);
     const yOffset = size * Math.floor(offset / totalSpritesX);
+
+    const handleClick = () => {
+        if (onClick !== undefined) onClick();
+        playSfx(ButtonClickSfx);
+    };
 
     return (
         <button
             title={title}
-            onClick={onClick}
+            onClick={handleClick}
             style={{
                 imageRendering: 'pixelated',
                 transformOrigin: 'top left',

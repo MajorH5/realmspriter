@@ -1,41 +1,46 @@
 import { useAudioPlayer } from "@/context/audio-player-context";
 import { ButtonClickSfx } from "@/resources/audio";
 
-type RotMGButtonProps = {
+export type RotMGButtonProps = {
     onClick?: () => void;
     playClickSfx?: boolean;
     children?: React.ReactNode;
     className?: string;
-}
+};
 
-export default function RotMGButton({
-    onClick,
-    playClickSfx = true,
-    children,
-    className
-}: RotMGButtonProps) {
-    const { playSfx  } = useAudioPlayer();
+const withDefaultClassName = (defaultClass: string) => {
+    return ({ className, onClick, playClickSfx = true, children }: RotMGButtonProps) => {
+        const { playSfx } = useAudioPlayer();
 
-    return (
-        <button
-            className={`
+        const handleClick = () => {
+            if (onClick !== undefined) onClick();
+            if (playClickSfx) playSfx(ButtonClickSfx);
+        };
+
+        return <button
+            onClick={handleClick}
+            className={`${defaultClass} ${className || ""}`}
+        >
+            {children}
+        </button >
+    };
+};
+
+export const BorderButton = withDefaultClassName(`
+                py-[2px] pl-3 pr-6 text-white
+                border-[2px] bg-transparent
+                hover:bg-[rgba(255,255,255,0.5)]
+                active:bg-transparent
+                text-lg text-left
+                font-myriadpro`);
+
+export const TextButton = withDefaultClassName(`
+                text-white text-lg font-bold
+                bg-transparent hover:text-[#ffda84]`);
+
+export const DefaultButton = withDefaultClassName(`
                 bg-white py-1 px-8 text-[#363636]
                 rounded-lg font-bold
                 hover:bg-[#ffda84]
                 disabled:bg-[#4f4f4f]
-                text-lg
-                ${className || ""}`}
-            onClick={() => {
-                if (playClickSfx) {
-                    playSfx(ButtonClickSfx);
-                }
-
-                if (onClick !== undefined) {
-                    onClick();
-                };
-            }}
-        >
-            {children}
-        </button>
-    );
-}
+                text-lg`);

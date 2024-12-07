@@ -20,7 +20,7 @@ export default function DisclaimerModal() {
     };
 
     return (
-        <Modal name="DisclaimerModal" className="w-[550px] h-[600px]">
+        <Modal name="DisclaimerModal" className="w-[550px] h-[580px]">
             <ModalHeader>
                 Disclaimer
             </ModalHeader>
@@ -78,7 +78,7 @@ export default function DisclaimerModal() {
             </ModalBody>
 
             <ModalFooter>
-                <ModalTrigger onClick={onDisclaimerClose}>
+                <ModalTrigger className="rotmg-button" onClick={onDisclaimerClose}>
                     I Understand
                 </ModalTrigger>
             </ModalFooter>

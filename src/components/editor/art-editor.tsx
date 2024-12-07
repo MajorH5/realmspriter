@@ -1,16 +1,18 @@
 "use client";
 
 import { RealmTrees } from "@/resources/images";
+import { useModal } from "@/context/modal-context";
 import ScrollingBackground from "./scrolling-background";
 
 import EditorModals from "./modals/editor-modals";
 import EditorTopBar from "./editor-topbar";
+import EditorSideButtons from "./editor-side-buttons";
 
 type ArtEditorProps = {
     className?: string
 }
 
-export function Loading () {
+export function Loading() {
     return (
         <div className="max-w-[880px] max-h-[700px] aspect-[880/700] w-full flex flex-col justify-center">
             <p className="text-center">Loading</p>
@@ -21,12 +23,21 @@ export function Loading () {
 export default function ArtEditor({
     className
 }: ArtEditorProps) {
+    const { activeModal } = useModal();
+
     return (
         <div
             className={`max-w-[880px] max-h-[700px] aspect-[880/700] w-full block overflow-hidden relative ${className || ""}`}
         >
+            {/* mute topbar element needs to stay rendered above all else */}
             <EditorTopBar />
-            <EditorModals />
+            {activeModal ? (
+                <EditorModals />
+            ) : (
+                <>
+                    <EditorSideButtons className="ml-4 mt-12" />
+                </>
+            )}
             <ScrollingBackground scale={4} image={RealmTrees} />
         </div>
     );
