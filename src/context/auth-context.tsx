@@ -6,6 +6,7 @@ interface AuthContextType {
     logout: () => void;
     login: (email: string, password: string) => Promise<User | null>;
     register: (username: string, email: string, password: string) => Promise<User | null>;
+    resendVerificationEmail: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -13,12 +14,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>({
         email: "user@example.com",
-        username: "username"
+        username: "username",
+        accountVerified: false
     });
 
     const login = (email: string, password: string): Promise<User | null> => {
         return new Promise((resolve, reject) => {
-            const exampleUser = { email, username: "username" };
+            const exampleUser = { email, username: "username", accountVerified: true };
 
             setUser(exampleUser);
             resolve(exampleUser);
@@ -31,15 +33,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const register = (username: string, email: string, password: string): Promise<User | null> => {
         return new Promise((resolve, reject) => {
-            const exampleUser = { email, username };
+            const exampleUser = { email, username, accountVerified: false };
 
             setUser(exampleUser);
             resolve(exampleUser);
         })
     };
 
+    const resendVerificationEmail = async (): Promise<boolean> => {
+        if (user === null) {
+            return false;
+        }
+
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, 1000);
+        });
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, register }}>
+        <AuthContext.Provider value={{ user, login, logout, register, resendVerificationEmail }}>
             {children}
         </AuthContext.Provider>
     );

@@ -6,10 +6,11 @@ export type RotMGButtonProps = {
     playClickSfx?: boolean;
     children?: React.ReactNode;
     className?: string;
+    disabled?: boolean;
 };
 
 const withDefaultClassName = (defaultClass: string) => {
-    return ({ className, onClick, playClickSfx = true, children }: RotMGButtonProps) => {
+    return ({ className, onClick, playClickSfx = true, children, disabled }: RotMGButtonProps) => {
         const { playSfx } = useAudioPlayer();
 
         const handleClick = () => {
@@ -20,6 +21,7 @@ const withDefaultClassName = (defaultClass: string) => {
         return <button
             onClick={handleClick}
             className={`${defaultClass} ${className || ""}`}
+            disabled={disabled}
         >
             {children}
         </button >

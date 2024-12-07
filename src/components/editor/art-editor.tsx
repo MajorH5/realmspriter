@@ -7,6 +7,7 @@ import ScrollingBackground from "./scrolling-background";
 import EditorModals from "./modals/editor-modals";
 import EditorTopBar from "./editor-topbar";
 import EditorSideButtons from "./editor-side-buttons";
+import EditorColorPicker from "./editor-color-picker";
 
 type ArtEditorProps = {
     className?: string
@@ -36,6 +37,10 @@ export default function ArtEditor({
             ) : (
                 <>
                     <EditorSideButtons className="ml-4 mt-12" />
+                    <div className="w-full flex flex-col justify-center items-center bg-transparent z-50 absolute">
+                        <canvas className="w-[300px] h-[440px]"></canvas>
+                    </div>
+                    <EditorColorPicker />
                 </>
             )}
             <ScrollingBackground scale={4} image={RealmTrees} />

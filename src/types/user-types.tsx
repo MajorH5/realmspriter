@@ -1,4 +1,5 @@
 export type User = {
     email: string,
-    username: string
+    username: string,
+    accountVerified: boolean
 };

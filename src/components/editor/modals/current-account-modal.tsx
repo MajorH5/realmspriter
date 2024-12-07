@@ -1,5 +1,6 @@
 import { useAudioPlayer } from "@/context/audio-player-context";
 import { useAuth } from "@/context/auth-context";
+import { useModal } from "@/context/modal-context";
 
 import {
     Modal,
@@ -10,12 +11,20 @@ import {
 } from "../../generic/modal";
 import { SorcMsc } from "@/resources/audio";
 import { TextButton } from "@/components/generic/rotmg-button";
-import { useModal } from "@/context/modal-context";
+import { useState } from "react";
 
 export default function CurrentAccountModal() {
     const { closeModal } = useModal();
-    const { user, logout } = useAuth();
+    const {
+        user,
+        logout,
+        resendVerificationEmail
+    } = useAuth();
     const { currentTheme, playTheme } = useAudioPlayer();
+    const [message, setMessage] = useState<string | null>(null);
+
+    const [sendingEmail, setSendingEmail] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
 
     const onContinue = () => {
         if (!currentTheme || currentTheme.getAudioSource() !== SorcMsc) {
@@ -23,11 +32,28 @@ export default function CurrentAccountModal() {
         }
     };
 
+    const verifyAccount = async () => {
+        if (sendingEmail || emailSent || user?.accountVerified) return;
+
+        setSendingEmail(true);
+
+        const result = await resendVerificationEmail();
+
+        if (result) {
+            setMessage("Verification email sent");
+            setEmailSent(true);
+        } else {
+            setMessage("Too many verification requests. Try again later");
+        }
+
+        setSendingEmail(false);
+    };
+
     return (
         <Modal
             name="CurrentAccountModal"
             backgroundColor="black"
-            className="!p-0 border-[1px] w-[400px] h-[315px] overflow-hidden"
+            className="!p-0 !border-[1px] w-[400px] h-[315px] overflow-hidden"
         >
             <ModalHeader className="bg-[#4D4D4D] shadow-md w-full">
                 <p className="text-left pl-[10px] py-3 text-base font-light text-[#B5B5B5]">
@@ -43,8 +69,15 @@ export default function CurrentAccountModal() {
                         textShadow: '0px 0px 4px black'
                     }}
                 >
-                    <p className="text-sm hover:text-[#ffda84] cursor-default">Click here to change password</p>
+                    <p
+                        className={`text-sm ${(sendingEmail || emailSent) ? "text-[#888888]" : "hover:text-[#ffda84]"} cursor-default`}
+                        onClick={() => verifyAccount()}
+                    >
+                        {!user?.accountVerified ? (emailSent ? "Sent..." : "Email not verified. Click here to resend email") : ""}&nbsp;
+                    </p>
+                    <p className="text-sm hover:text-[#ffda84] cursor-default" onClick={() => closeModal()}>Click here to change password</p>
                     <p className="text-sm hover:text-[#ffda84] cursor-default" onClick={() => (logout(), closeModal())}>Not you? Click here to log out</p>
+                    <p className="text-sm text-[#FA8641] cursor-default select-none">{message}&nbsp;</p>
                 </div>
             </ModalBody>
 

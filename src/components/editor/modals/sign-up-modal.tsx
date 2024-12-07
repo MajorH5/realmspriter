@@ -38,7 +38,6 @@ export default function SignUpModal() {
         const emailInput = document.getElementById("email") as HTMLInputElement;
 
         let error = null;
-        console.log(username);
 
         if (username === "") {
             error = "Please enter a valid username";
@@ -143,7 +142,7 @@ export default function SignUpModal() {
                 >
                     <p className="text-sm text-[#FA8641] cursor-default select-none">{error}&nbsp;</p> {/* <-- non breaking space to maintain rendering */}
                     <p className="text-sm hover:text-[#ffda84] cursor-default select-none" onClick={() => openModal("SignInModal")}>Already registered? Click here to sign in!</p>
-                    <p className="text-sm hover:text-[#ffda84] cursor-default select-none mt-4">
+                    <p className="text-sm mt-4">
                         By clicking 'Register', you are indicating that you have
                         read and agreed to the Terms of Use and the Privacy Policy
                     </p>
@@ -160,6 +159,7 @@ export default function SignUpModal() {
                 <TextButton
                     onClick={() => formRef.current?.requestSubmit()}
                     className="m-4"
+                    disabled={isSigningUp}
                 >
                     <p className="text-2xl">Register</p>
                 </TextButton>
