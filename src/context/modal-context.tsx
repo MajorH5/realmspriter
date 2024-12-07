@@ -3,7 +3,7 @@
 import { OnScreenModal } from "@/types/modal-types";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-const InitialModal: OnScreenModal | null = "SignInModal";
+const InitialModal: OnScreenModal | null = "SignUpModal";
 
 interface ModalContextType {
     activeModal: OnScreenModal | null;

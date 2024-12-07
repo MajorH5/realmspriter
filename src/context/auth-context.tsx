@@ -5,6 +5,7 @@ interface AuthContextType {
     user: User | null,
     logout: () => void;
     login: (email: string, password: string) => Promise<User | null>;
+    register: (username: string, email: string, password: string) => Promise<User | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,7 +16,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         username: "username"
     });
 
-    const login = (email: string, password: string): Promise<User> => {
+    const login = (email: string, password: string): Promise<User | null> => {
         return new Promise((resolve, reject) => {
             const exampleUser = { email, username: "username" };
 
@@ -28,8 +29,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(null);
     };
 
+    const register = (username: string, email: string, password: string): Promise<User | null> => {
+        return new Promise((resolve, reject) => {
+            const exampleUser = { email, username };
+
+            setUser(exampleUser);
+            resolve(exampleUser);
+        })
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, register }}>
             {children}
         </AuthContext.Provider>
     );

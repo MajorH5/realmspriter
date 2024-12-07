@@ -1,7 +1,7 @@
 export type OnScreenModal =
     "WelcomeModal" | "DisclaimerModal" |
     "CurrentAccountModal" | "ChangePasswordModal" |
-    "SignInModal";
+    "SignInModal" | "SignUpModal";
 
 export type PopupModal =
     "NotificationsModal" | "PatchNotesModal";

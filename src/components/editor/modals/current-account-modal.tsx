@@ -10,9 +10,11 @@ import {
 } from "../../generic/modal";
 import { SorcMsc } from "@/resources/audio";
 import { TextButton } from "@/components/generic/rotmg-button";
+import { useModal } from "@/context/modal-context";
 
 export default function CurrentAccountModal() {
-    const { user } = useAuth();
+    const { closeModal } = useModal();
+    const { user, logout } = useAuth();
     const { currentTheme, playTheme } = useAudioPlayer();
 
     const onContinue = () => {
@@ -42,7 +44,7 @@ export default function CurrentAccountModal() {
                     }}
                 >
                     <p className="text-sm hover:text-[#ffda84] cursor-default">Click here to change password</p>
-                    <p className="text-sm hover:text-[#ffda84] cursor-default">Not you? Click here to log out</p>
+                    <p className="text-sm hover:text-[#ffda84] cursor-default" onClick={() => (logout(), closeModal())}>Not you? Click here to log out</p>
                 </div>
             </ModalBody>
 
