@@ -7,7 +7,7 @@ import ScrollingBackground from "./scrolling-background";
 import EditorModals from "./modals/editor-modals";
 import EditorTopBar from "./editor-topbar";
 import EditorSideButtons from "./editor-side-buttons";
-import EditorColorPicker from "./editor-color-picker";
+import EditorColorPicker from "./colors/editor-color-picker";
 
 type ArtEditorProps = {
     className?: string
