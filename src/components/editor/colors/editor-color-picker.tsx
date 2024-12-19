@@ -3,10 +3,22 @@ import { useEditor } from "@/context/art-editor-context";
 export default function EditorColorPicker() {
     const { currentColor, setCurrentColor, colorHistory } = useEditor();
 
+    const updateColor = (targetColor: string) => {
+        if (targetColor.length < 6) {
+            const hex = `#${targetColor}`;
+
+            if (!/#[0-9a-fA-F]{6}/.test(hex)) {
+                return;
+            }
+
+            setCurrentColor(hex);
+        }
+    };
+
     return (
         <div
             className="absolute w-full h-full bg-transparent"
-            style={{ zIndex: 999 /* <-- TODO: better approach than z-index layering */ }}
+            style={{ zIndex: 20 /* <-- TODO: better approach than z-index layering */ }}
         >
             <div className="h-full flex flex-row items-end justify-center">
                 <div className="flex flex-col justify-center items-center space-y-3">
@@ -31,7 +43,13 @@ export default function EditorColorPicker() {
                         ))}
                     </div>
 
-                    <input type="text" className="w-[100px] h-[30px] bg-transparent border border-white" value={currentColor} />
+                    <input
+                        type="text"
+                        className="w-[100px] h-[30px] bg-transparent border border-white"
+                        value={currentColor.slice(1)}
+                        maxLength={6}
+                        onChange={e => updateColor(e.target.value)}
+                    />
 
                     <div
                         className="w-[180px] h-[25px] border-2 border-white"
