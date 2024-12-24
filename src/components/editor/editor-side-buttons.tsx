@@ -1,6 +1,7 @@
 import { useEditor } from "@/context/art-editor-context";
 import { BorderButton } from "../generic/rotmg-button";
 import { EditMode } from "@/utils/constants";
+import { useModal } from "@/context/modal-context";
 
 export default function EditorSideButtons({
     className
@@ -8,6 +9,7 @@ export default function EditorSideButtons({
     className: string
 }) {
     const { editMode, setEditMode } = useEditor();
+    const { openModal } = useModal();
 
     const getSelectStyle = (targetState: EditMode.Type) => {
         return editMode === targetState ? "!bg-[rgba(255,255,255,0.5)]" : "";
@@ -33,7 +35,7 @@ export default function EditorSideButtons({
                 <BorderButton>(C)lear</BorderButton>
             </div>
             <div className="flex flex-col space-y-2">
-                <BorderButton>(L)oad</BorderButton>
+                <BorderButton onClick={() => openModal("LoadModal")}>(L)oad</BorderButton>
                 <BorderButton>(S)ave</BorderButton>
                 <BorderButton>E(X)port</BorderButton>
             </div>

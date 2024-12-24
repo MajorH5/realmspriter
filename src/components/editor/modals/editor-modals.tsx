@@ -3,6 +3,7 @@ import DisclaimerModal from "./disclaimer-modal";
 import CurrentAccountModal from "./current-account-modal";
 import SignInModal from "./sign-in-modal";
 import SignUpModal from "./sign-up-modal";
+import LoadModal from "./load-modal";
 
 export default function () {
     return (
@@ -15,6 +16,7 @@ export default function () {
                 <CurrentAccountModal />
                 <SignInModal />
                 <SignUpModal />
+                <LoadModal />
             </div>
         </>
     );
