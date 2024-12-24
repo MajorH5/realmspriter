@@ -8,6 +8,8 @@ import EditorModals from "./modals/editor-modals";
 import EditorTopBar from "./editor-topbar";
 import EditorSideButtons from "./editor-side-buttons";
 import EditorColorPicker from "./colors/editor-color-picker";
+import EditorCanvas from "./editor-canvas";
+import EditorPreview from "./editor-preview";
 
 type ArtEditorProps = {
     className?: string
@@ -37,9 +39,10 @@ export default function ArtEditor({
             ) : (
                 <>
                     <EditorSideButtons className="ml-4 mt-12" />
-                    {/* <div className="w-full flex flex-col justify-center items-center bg-transparent z-50 absolute">
-                        <canvas className="w-[300px] h-[440px]"></canvas>
-                    </div> */}
+                    <div className="w-full h-full flex flex-row justify-end items-center bg-transparent z-20 pr-6 absolute space-x-5">
+                        <EditorCanvas />
+                        <EditorPreview />
+                    </div>
                     <EditorColorPicker />
                 </>
             )}

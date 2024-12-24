@@ -1,15 +1,13 @@
 "use client";
 
-import { EditMode } from "@/utils/constants";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-const INITIAL_EDITOR_COLOR = "#ff0000";
-const INITIAL_COLOR_HISTORY = [
-  '#ff0000', '#00ff00', '#0000ff',
-  '#ffff00', '#ff00ff', '#00ffff',
-  '#ffffff', '#000000', '#ff8800',
-  '#8800ff', '#00ff88', '#ff0088'
-];
+import {
+  EditMode,
+  MAX_ZOOM_LEVEL,
+  INITIAL_EDITOR_COLOR,
+  INITIAL_COLOR_HISTORY
+} from "@/utils/constants";
 
 interface ArtEditorContextType {
   editMode: EditMode.Type,
@@ -21,6 +19,9 @@ interface ArtEditorContextType {
   colorHistory: string[];
   addColorToHistory: (color: string) => void;
   removeColorFromHistory: (color: string) => void;
+
+  zoomLevel: number;
+  setZoomLevel: (zoomLevel: number) => void;
 };
 
 const ArtEditorContext = createContext<ArtEditorContextType | undefined>(undefined);
@@ -29,6 +30,7 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const [editMode, setEditMode] = useState<EditMode.Type>(EditMode.DRAW);
   const [currentColor, setCurrentColor] = useState<string>(INITIAL_EDITOR_COLOR);
   const [colorHistory, setColorHistory] = useState<string[]>(INITIAL_COLOR_HISTORY);
+  const [zoomLevel, setZoomLevel] = useState<number>(100);
 
   const addColorToHistory = (color: string) => {
     const index = colorHistory.findIndex((i) => color === i);
@@ -54,13 +56,24 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     setColorHistory(arr);
   };
 
+  const safeSetZoomLevel = (zoomLevel: number) => {
+    if (zoomLevel < 0) {
+      zoomLevel = 0;
+    } else if (zoomLevel > MAX_ZOOM_LEVEL) {
+      zoomLevel = MAX_ZOOM_LEVEL
+    }
+
+    setZoomLevel(zoomLevel);
+  };
+
   return (
     <ArtEditorContext.Provider value={{
       editMode, setEditMode,
       currentColor, setCurrentColor,
       colorHistory,
       addColorToHistory,
-      removeColorFromHistory
+      removeColorFromHistory,
+      zoomLevel, setZoomLevel: safeSetZoomLevel
     }}>
       {children}
     </ArtEditorContext.Provider>

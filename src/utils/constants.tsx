@@ -19,3 +19,14 @@ export namespace EditMode {
     export const SAMPLE = "Sample";
     export type Type = "Draw" | "Erase" | "Sample";
 };
+
+export const MAX_ZOOM_LEVEL = 200;
+export const ZOOM_LEVEL_INCREMENT = 10;
+
+export const INITIAL_EDITOR_COLOR = "#ff0000";
+export const INITIAL_COLOR_HISTORY = [
+  '#ff0000', '#00ff00', '#0000ff',
+  '#ffff00', '#ff00ff', '#00ffff',
+  '#ffffff', '#000000', '#ff8800',
+  '#8800ff', '#00ff88', '#ff0088'
+];

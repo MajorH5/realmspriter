@@ -17,7 +17,7 @@ export default function EditorColorPicker() {
 
     return (
         <div
-            className="absolute w-full h-full bg-transparent"
+            className="absolute w-full h-full bg-transparent pb-2"
             style={{ zIndex: 20 /* <-- TODO: better approach than z-index layering */ }}
         >
             <div className="h-full flex flex-row items-end justify-center">
