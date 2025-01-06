@@ -6,11 +6,12 @@ import {
   EditMode,
   MAX_ZOOM_LEVEL,
   INITIAL_EDITOR_COLOR,
-  INITIAL_COLOR_HISTORY
+  INITIAL_COLOR_HISTORY,
+  INITIAL_ART_SIZE
 } from "@/utils/constants";
 
 interface ArtEditorContextType {
-  editMode: EditMode.Type,
+  editMode: EditMode.Type;
   setEditMode: (editMode: EditMode.Type) => void;
 
   currentColor: string;
@@ -22,15 +23,19 @@ interface ArtEditorContextType {
 
   zoomLevel: number;
   setZoomLevel: (zoomLevel: number) => void;
+
+  artSize: [number, number];
+  setArtSize: (artSize: [number, number]) => void;
 };
 
 const ArtEditorContext = createContext<ArtEditorContextType | undefined>(undefined);
 
 export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const [editMode, setEditMode] = useState<EditMode.Type>(EditMode.DRAW);
-  const [currentColor, setCurrentColor] = useState<string>(INITIAL_EDITOR_COLOR);
-  const [colorHistory, setColorHistory] = useState<string[]>(INITIAL_COLOR_HISTORY);
-  const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [currentColor, setCurrentColor] = useState(INITIAL_EDITOR_COLOR);
+  const [colorHistory, setColorHistory] = useState(INITIAL_COLOR_HISTORY);
+  const [zoomLevel, setZoomLevel] = useState(100);
+  const [artSize, setArtSize] = useState<[number, number]>(INITIAL_ART_SIZE);
 
   const addColorToHistory = (color: string) => {
     const index = colorHistory.findIndex((i) => color === i);
@@ -73,7 +78,8 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
       colorHistory,
       addColorToHistory,
       removeColorFromHistory,
-      zoomLevel, setZoomLevel: safeSetZoomLevel
+      zoomLevel, setZoomLevel: safeSetZoomLevel,
+      artSize, setArtSize
     }}>
       {children}
     </ArtEditorContext.Provider>

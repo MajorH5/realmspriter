@@ -9,13 +9,23 @@ import { useAuth } from "@/context/auth-context";
 import ImageButton from "../generic/image-button";
 import { TextButton } from "../generic/rotmg-button";
 import { SpriteMode, SpriteSize } from "@/utils/constants";
+import { useEditor } from "@/context/art-editor-context";
+import { ChangeEvent } from "react";
 
 export default function EditorTopBar() {
     const { userMusicEnabled, muteMusic, unmuteMusic } = useAudioPlayer();
     const { activeModal, toggleModal, openModal } = useModal();
     const { user, logout } = useAuth();
+    const { artSize, setArtSize } = useEditor();
 
     const shouldRenderToolbarButtons = !activeModal;
+
+    const onSpriteSizeChanged = (event: ChangeEvent<HTMLSelectElement>) => {
+        const dataset = event.target.selectedOptions[0].dataset;
+        const selectedValue = [Number(dataset.width), Number(dataset.height)];
+        
+        setArtSize(selectedValue as [number, number]);
+    };
 
     return (
         <div className="absolute flex flex-col w-full">
@@ -89,11 +99,11 @@ export default function EditorTopBar() {
 
                     <label htmlFor="size" className="text-[#dddddd] text-lg"><b>Size:</b></label>
                     <div className="w-fit h-fit border-[2px] mx-4 rounded-sm border-[#696A68] text-lg">
-                        <select name="mode" className="rotmg-dropdown" defaultValue={SpriteSize.S8X8}>
-                            <option value={SpriteSize.S8X8}>8 x 8</option>
-                            <option value={SpriteSize.S16X8}>16 x 8</option>
-                            <option value={SpriteSize.S16X16}>16 x 16</option>
-                            <option value={SpriteSize.S32X32}>32 x 32</option>
+                        <select name="mode" className="rotmg-dropdown" defaultValue="8x8" onChange={onSpriteSizeChanged}>
+                        <option data-width="8" data-height="8">8 x 8</option>
+                        <option data-width="16" data-height="8">16 x 8</option>
+                        <option data-width="16" data-height="16">16 x 16</option>
+                        <option data-width="32" data-height="32">32 x 32</option>
                         </select>
                     </div>
                 </div>
