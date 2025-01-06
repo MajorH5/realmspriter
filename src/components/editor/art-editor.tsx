@@ -39,7 +39,7 @@ export default function ArtEditor({
             ) : (
                 <>
                     <EditorSideButtons className="ml-4 mt-12" />
-                    <div className="w-full h-full flex flex-row justify-end items-center bg-transparent z-20 pr-6 absolute space-x-5">
+                    <div className="left-1/2 translate-x-[-41.5%] top-1/2 translate-y-[-53.5%] flex flex-row justify-end items-center z-30  absolute space-x-5">
                         <EditorCanvas />
                         <EditorPreview />
                     </div>

@@ -16,12 +16,12 @@ export default function EditorColorPicker() {
     };
 
     return (
-        <div
-            className="absolute w-full h-full bg-transparent pb-2"
-            style={{ zIndex: 20 /* <-- TODO: better approach than z-index layering */ }}
-        >
-            <div className="h-full flex flex-row items-end justify-center">
-                <div className="flex flex-col justify-center items-center space-y-3">
+        // <div
+        //     className="absolute w-full h-full bg-transparent pb-2"
+        //     style={{ zIndex: 30 /* <-- TODO: better approach than z-index layering */ }}
+        // >
+            // <div className="h-full flex flex-row items-end justify-center">
+                <div className="absolute left-1/2 translate-x-[-50%] bottom-3 flex flex-col justify-center items-center space-y-3 z-40">
 
                     <div
                         className="flex flex-wrap justify-center items-center max-w-[180px] gap-2"
@@ -59,7 +59,7 @@ export default function EditorColorPicker() {
                         }}
                     />
                 </div>
-            </div>
-        </div>
+            // </div>
+        // </div>
     );
 }

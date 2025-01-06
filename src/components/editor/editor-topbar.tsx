@@ -28,8 +28,8 @@ export default function EditorTopBar() {
     };
 
     return (
-        <div className="absolute flex flex-col w-full">
-            <div className="flex flex-row w-full z-30 p-1 space-x-6">
+        <div className="absolute flex flex-col w-full z-40">
+            <div className="flex flex-row w-full p-1 space-x-6">
                 <ImageButton
                     title={userMusicEnabled ? "Mute music" : "Unmute music"}
                     totalSpritesX={5}
