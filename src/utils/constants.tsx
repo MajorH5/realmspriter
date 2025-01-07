@@ -34,4 +34,5 @@ export const INITIAL_COLOR_HISTORY = [
     '#ffffff', '#000000', '#ff8800',
     '#8800ff', '#00ff88', '#ff0088'
 ];
-export const INITIAL_ART_SIZE: [number, number] = [8, 8];
+export const INITIAL_ART_SIZE: {x: number, y: number} = {x: 8, y: 8};
+export const MAX_ART_SIZE: { x: number, y: number } = { x: 128, y: 128 };
