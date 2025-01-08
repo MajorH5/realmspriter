@@ -29,7 +29,7 @@ interface ArtEditorContextType {
   artSize: { x: number, y: number };
   setArtSize: (artSize: {x: number, y: number}) => void;
 
-  imagePixels: Uint8ClampedArray;
+  image: {pixels: Uint8ClampedArray};
   setPixel: (x: number, y: number, color: string) => void;
   getPixel: (x: number, y: number) => string | null;
 };
@@ -42,7 +42,7 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const [colorHistory, setColorHistory] = useState(INITIAL_COLOR_HISTORY);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [artSize, setArtSize] = useState<{x: number, y: number}>(INITIAL_ART_SIZE);
-  const [imagePixels, setImagePixels] = useState({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
+  const [image, setImage] = useState({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
 
   const addColorToHistory = (color: string) => {
     const index = colorHistory.findIndex((i) => color === i);
@@ -85,14 +85,16 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     if (size.y > MAX_ART_SIZE.y) size.y = MAX_ART_SIZE.y;
 
     // resize pixels
-    setImagePixels({ pixels: new Uint8ClampedArray(size.x * size.y * 4) });
-    setArtSize(artSize);
+    setImage({ pixels: new Uint8ClampedArray(size.x * size.y * 4) });
+    setArtSize(size);
   };
 
   const setPixel = (x: number, y: number, color: string | null) => {
-    const index = y * artSize.x + x;
+    if (getPixel(x, y) === color) return;
 
-    if (index < 0 || index >= imagePixels.pixels.length) {
+    const index = (y * artSize.x + x) * 4;
+
+    if (index < 0 || index >= image.pixels.length) {
       return;
     }
     
@@ -105,26 +107,26 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
       a = 255;
     }
 
-    imagePixels.pixels[index + 0] = r;
-    imagePixels.pixels[index + 1] = g;
-    imagePixels.pixels[index + 2] = b;
-    imagePixels.pixels[index + 3] = a;
+    image.pixels[index + 0] = r;
+    image.pixels[index + 1] = g;
+    image.pixels[index + 2] = b;
+    image.pixels[index + 3] = a;
 
     // trying to avoid large repeated array copying
-    setImagePixels({ pixels: imagePixels.pixels });
+    setImage({ pixels: image.pixels });
   };
 
   const getPixel = (x: number, y: number): string | null => {
-    const index = y * artSize.x + x;
+    const index = (y * artSize.x + x) * 4;
 
-    if (index < 0 || index >= imagePixels.pixels.length) {
+    if (index < 0 || index >= image.pixels.length) {
       return null;
     }
 
-    const r = imagePixels.pixels[index + 0];
-    const g = imagePixels.pixels[index + 1];
-    const b = imagePixels.pixels[index + 2];
-    const a = imagePixels.pixels[index + 3];
+    const r = image.pixels[index + 0];
+    const g = image.pixels[index + 1];
+    const b = image.pixels[index + 2];
+    const a = image.pixels[index + 3];
 
     if (a === 255) {
       return RGBtohex({ r, g, b});
@@ -142,8 +144,7 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
       removeColorFromHistory,
       zoomLevel, setZoomLevel: safeSetZoomLevel,
       artSize, setArtSize: safeSetArtSize,
-      imagePixels: imagePixels.pixels,
-      setPixel, getPixel
+      image, setPixel, getPixel
     }}>
       {children}
     </ArtEditorContext.Provider>

@@ -1,5 +1,6 @@
 import { useEditor } from "@/context/art-editor-context";
 import { TransparentTiles } from "@/resources/images";
+import { hexToRGB, RGBtohex } from "@/utils/utility";
 import {
     useEffect,
     useRef,
@@ -15,10 +16,12 @@ export default function EditorCanvas() {
         artSize,
         currentColor,
         getPixel,
-        setPixel
+        setPixel,
+        image
     } = useEditor();
     const [mouseCell, setMouseCell] = useState({ x: 0, y: 0 });
     const [mouseDown, setMouseDown] = useState(false);
+    const [mouseOver, setMouseOver] = useState(false);
 
     // Refs for the canvas elements
     const mainCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,10 +61,10 @@ export default function EditorCanvas() {
         for (let y = 0; y < artSize.y; y++) {
             for (let x = 0; x < artSize.x; x++) {
                 context.strokeRect(
-                    x * cellSize.x,
-                    y * cellSize.y,
-                    cellSize.x - 0.5,
-                    cellSize.y - 0.5
+                    Math.floor(x * cellSize.x),
+                    Math.floor(y * cellSize.y),
+                    Math.floor(cellSize.x),
+                    Math.floor(cellSize.y)
                 );
             }
         }
@@ -99,10 +102,10 @@ export default function EditorCanvas() {
 
         context.fillStyle = color;
         context.fillRect(
-            x * cellSize.x,
-            y * cellSize.y,
-            cellSize.x,
-            cellSize.y
+            Math.floor(x * cellSize.x),
+            Math.floor(y * cellSize.y),
+            Math.floor(cellSize.x),
+            Math.floor(cellSize.y)
         );
     };
 
@@ -118,26 +121,28 @@ export default function EditorCanvas() {
 
         const [x, y] = normalizeMousePosition(event.clientX, event.clientY, canvas);
 
-        // put the old cell back to its actual value
-        const oldCell = getPixel(mouseCell.x, mouseCell.y);
+        // // put the old cell back to its actual value
+        // const oldCell = getPixel(mouseCell.x, mouseCell.y);
 
-        if (oldCell !== null) {
-            fillCell(mouseCell.x, mouseCell.y, oldCell);
-        } else {
-            clearCell(mouseCell.x, mouseCell.y);
-        }
+        // if (oldCell !== null) {
+        //     fillCell(mouseCell.x, mouseCell.y, oldCell);
+        // } else {
+        //     clearCell(mouseCell.x, mouseCell.y);
+        // }
 
         // Fill new cell
         const newCellX = Math.floor(x / cellSize.x);
         const newCellY = Math.floor(y / cellSize.y);
 
-        fillCell(newCellX, newCellY, currentColor);
-        // Report mouse cell
-        setMouseCell({x: newCellX, y: newCellY});
+        // fillCell(newCellX, newCellY, currentColor);
+        
+        if (mouseCell.x !== newCellX || mouseCell.y !== newCellY) {
+            // Report mouse cell
+            setMouseCell({x: newCellX, y: newCellY});
+        }
 
-        console.log(mouseDown, oldCell)
         if (mouseDown) {
-            setPixel(newCellX, newCellY, currentColor);
+            setPixel(newCellX, newCellY, currentColor);     
         }
     };
 
@@ -160,8 +165,47 @@ export default function EditorCanvas() {
 
     const onMouseLeave = (event: MouseEvent<HTMLCanvasElement>) => {
         setMouseDown(false);
+        setMouseOver(false);
         clearCell(mouseCell.x, mouseCell.y);
-    }
+    };
+
+    const onMouseEnter = (event: MouseEvent<HTMLCanvasElement>) => {
+        setMouseOver(true);
+    };
+
+    useEffect(() => {
+        const canvas = mainCanvasRef.current;
+        const context = canvas?.getContext("2d");
+        
+        if (!canvas || !context) return;
+
+        const pixels = image.pixels.slice();
+
+        if (mouseOver) {
+            const index = (mouseCell.y * artSize.x + mouseCell.x) * 4;
+            const { r, g, b } = hexToRGB(currentColor);
+
+            pixels[index + 0] = r;
+            pixels[index + 1] = g;
+            pixels[index + 2] = b;
+            pixels[index + 3] = 255;
+        }
+
+        const imageCanvas = document.createElement("canvas");
+        const imageContext = imageCanvas.getContext("2d")!;
+
+        imageCanvas.width = artSize.x;
+        imageCanvas.height = artSize.y;
+
+        const imageData = new ImageData(pixels, artSize.x, artSize.y);
+        imageContext.putImageData(imageData, 0, 0);
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.imageSmoothingEnabled = false;
+        context.drawImage(imageCanvas, 0, 0,
+            imageCanvas.width, imageCanvas.height,
+            0, 0, canvas.width, canvas.height);
+    }, [image, mouseCell]);
 
     return (
         <div className="grid">
@@ -179,6 +223,7 @@ export default function EditorCanvas() {
                 id="grid-canvas"
                 onMouseMove={onMouseMove}
                 onMouseDown={onMouseDown}
+                onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onMouseUp={onMouseUp}
                 style={{

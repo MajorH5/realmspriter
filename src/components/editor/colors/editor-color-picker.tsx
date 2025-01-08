@@ -49,6 +49,7 @@ export default function EditorColorPicker() {
                         value={currentColor.slice(1)}
                         maxLength={6}
                         onChange={e => updateColor(e.target.value)}
+                        placeholder="hex (xxxxxx)"
                     />
 
                     <div

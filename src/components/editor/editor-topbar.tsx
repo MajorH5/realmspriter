@@ -22,9 +22,9 @@ export default function EditorTopBar() {
 
     const onSpriteSizeChanged = (event: ChangeEvent<HTMLSelectElement>) => {
         const dataset = event.target.selectedOptions[0].dataset;
-        const selectedValue = [Number(dataset.width), Number(dataset.height)];
+        const selectedValue = {x: Number(dataset.width), y: Number(dataset.height)};
         
-        setArtSize(selectedValue as [number, number]);
+        setArtSize(selectedValue as {x: number, y: number});
     };
 
     return (
