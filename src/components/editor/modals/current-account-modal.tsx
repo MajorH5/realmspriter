@@ -18,13 +18,12 @@ export default function CurrentAccountModal() {
     const {
         user,
         logout,
-        resendVerificationEmail
+        resendVerificationEmail,
+        sendingEmail,
+        emailSent
     } = useAuth();
     const { currentTheme, playTheme } = useAudioPlayer();
     const [message, setMessage] = useState<string | null>(null);
-
-    const [sendingEmail, setSendingEmail] = useState(false);
-    const [emailSent, setEmailSent] = useState(false);
 
     const onContinue = () => {
         if (!currentTheme || currentTheme.getAudioSource() !== SorcMsc) {
@@ -35,18 +34,13 @@ export default function CurrentAccountModal() {
     const verifyAccount = async () => {
         if (sendingEmail || emailSent || user?.accountVerified) return;
 
-        setSendingEmail(true);
-
         const result = await resendVerificationEmail();
 
         if (result) {
             setMessage("Verification email sent");
-            setEmailSent(true);
         } else {
             setMessage("Too many verification requests. Try again later");
         }
-
-        setSendingEmail(false);
     };
 
     return (

@@ -7,6 +7,8 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<User | null>;
     register: (username: string, email: string, password: string) => Promise<User | null>;
     resendVerificationEmail: () => Promise<boolean>;
+    sendingEmail: boolean;
+    emailSent: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,6 +19,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         username: "username",
         accountVerified: false
     });
+    const [sendingEmail, setSendingEmail] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
 
     const login = (email: string, password: string): Promise<User | null> => {
         return new Promise((resolve, reject) => {
@@ -45,15 +49,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return false;
         }
 
+        setSendingEmail(true);
+
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(true);
+                setEmailSent(true);
+                setSendingEmail(false);
             }, 1000);
         });
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register, resendVerificationEmail }}>
+        <AuthContext.Provider value={{
+            user, login, logout, register,
+            resendVerificationEmail, sendingEmail, emailSent
+        }}>
             {children}
         </AuthContext.Provider>
     );

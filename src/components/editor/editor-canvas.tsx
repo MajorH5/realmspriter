@@ -233,7 +233,7 @@ export default function EditorCanvas() {
             imageCanvas.width, imageCanvas.height,
             0, 0, canvas.width, canvas.height);
         context.translate(-0.5, -0.5);
-    }, [image, mouseCell]);
+    }, [image, mouseCell, mouseOver]);
 
     return (
         <div className="grid">
