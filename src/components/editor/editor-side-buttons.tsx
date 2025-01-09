@@ -8,7 +8,7 @@ export default function EditorSideButtons({
 }: {
     className: string
 }) {
-    const { editMode, setEditMode } = useEditor();
+    const { editMode, setEditMode, clearImage } = useEditor();
     const { openModal } = useModal();
 
     const getSelectStyle = (targetState: EditMode.Type) => {
@@ -32,7 +32,7 @@ export default function EditorSideButtons({
 
                 <BorderButton>(U)ndo</BorderButton>
                 <BorderButton>(R)edo</BorderButton>
-                <BorderButton>(C)lear</BorderButton>
+                <BorderButton onClick={clearImage}>(C)lear</BorderButton>
             </div>
             <div className="flex flex-col space-y-2">
                 <BorderButton onClick={() => openModal("LoadModal")}>(L)oad</BorderButton>

@@ -1,5 +1,6 @@
 import { useEditor } from "@/context/art-editor-context";
 import { TransparentTiles } from "@/resources/images";
+import { EditMode } from "@/utils/constants";
 import { hexToRGB, RGBtohex } from "@/utils/utility";
 import {
     useEffect,
@@ -17,7 +18,9 @@ export default function EditorCanvas() {
         currentColor,
         getPixel,
         setPixel,
-        image
+        image,
+        editMode,
+        setCurrentColor
     } = useEditor();
     const [mouseCell, setMouseCell] = useState({ x: 0, y: 0 });
     const [mouseDown, setMouseDown] = useState(false);
@@ -38,6 +41,24 @@ export default function EditorCanvas() {
         };
     }, [artSize]);
 
+    const interactWithPixel = (x: number, y: number) => {
+        switch(editMode) {
+            case EditMode.DRAW:
+                setPixel(x, y, currentColor);     
+                break;
+            case EditMode.ERASE:
+                setPixel(x, y, null);
+                break;
+            case EditMode.SAMPLE:
+                const color = getPixel(x, y);
+
+                if (color !== null) {
+                    setCurrentColor(color);
+                }
+                break;
+        }
+    };
+
     const updateCanvasSize = (canvas: HTMLCanvasElement | null) => {
         if (!canvas) return;
 
@@ -54,20 +75,25 @@ export default function EditorCanvas() {
 
         // Draw the grid
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.strokeStyle = "#FFFFFF";
+        context.strokeStyle = "#ffffff";
         context.lineWidth = 0.5;
         context.globalAlpha = 1;
 
-        for (let y = 0; y < artSize.y; y++) {
-            for (let x = 0; x < artSize.x; x++) {
-                context.strokeRect(
-                    Math.floor(x * cellSize.x),
-                    Math.floor(y * cellSize.y),
-                    Math.floor(cellSize.x),
-                    Math.floor(cellSize.y)
+        context.translate(0.5, 0.5);
+        context.rect(0, 0, canvas.width - 1, canvas.height - 1);
+        context.stroke();
+        for (let y = 0; y <= artSize.y; y++) {
+            for (let x = 0; x <= artSize.x; x++) {
+                context.rect(
+                    (x * cellSize.x),
+                    (y * cellSize.y),
+                    (cellSize.x),
+                    (cellSize.y)
                 );
+                context.stroke();
             }
         }
+        context.translate(-0.5, -0.5);
     };
 
     useEffect(() => {
@@ -96,45 +122,14 @@ export default function EditorCanvas() {
         return [mouseX, mouseY];
     };
 
-    const fillCell = (x: number, y: number, color: string) => {
-        const context = mainCanvasRef.current?.getContext("2d");
-        if (!context) return;
-
-        context.fillStyle = color;
-        context.fillRect(
-            Math.floor(x * cellSize.x),
-            Math.floor(y * cellSize.y),
-            Math.floor(cellSize.x),
-            Math.floor(cellSize.y)
-        );
-    };
-
-    const clearCell = (x: number, y: number) => {
-        const context = mainCanvasRef.current?.getContext("2d");
-        if (!context) return;
-        context.clearRect(x * cellSize.x, y * cellSize.y, cellSize.x, cellSize.y);
-    }
-
     const onMouseMove = (event: MouseEvent<HTMLCanvasElement>) => {
         const canvas = mainCanvasRef.current;
         if (!canvas) return;
 
         const [x, y] = normalizeMousePosition(event.clientX, event.clientY, canvas);
 
-        // // put the old cell back to its actual value
-        // const oldCell = getPixel(mouseCell.x, mouseCell.y);
-
-        // if (oldCell !== null) {
-        //     fillCell(mouseCell.x, mouseCell.y, oldCell);
-        // } else {
-        //     clearCell(mouseCell.x, mouseCell.y);
-        // }
-
-        // Fill new cell
         const newCellX = Math.floor(x / cellSize.x);
         const newCellY = Math.floor(y / cellSize.y);
-
-        // fillCell(newCellX, newCellY, currentColor);
         
         if (mouseCell.x !== newCellX || mouseCell.y !== newCellY) {
             // Report mouse cell
@@ -142,7 +137,7 @@ export default function EditorCanvas() {
         }
 
         if (mouseDown) {
-            setPixel(newCellX, newCellY, currentColor);     
+            interactWithPixel(newCellX, newCellY);
         }
     };
 
@@ -153,10 +148,11 @@ export default function EditorCanvas() {
         if (!canvas) return;
 
         const [x, y] = normalizeMousePosition(event.clientX, event.clientY, canvas);
+
         const newCellX = Math.floor(x / cellSize.x);
         const newCellY = Math.floor(y / cellSize.y);
         
-        setPixel(newCellX, newCellY, currentColor);
+        interactWithPixel(newCellX, newCellY);
     };
 
     const onMouseUp = (event: MouseEvent<HTMLCanvasElement>) => {
@@ -166,7 +162,6 @@ export default function EditorCanvas() {
     const onMouseLeave = (event: MouseEvent<HTMLCanvasElement>) => {
         setMouseDown(false);
         setMouseOver(false);
-        clearCell(mouseCell.x, mouseCell.y);
     };
 
     const onMouseEnter = (event: MouseEvent<HTMLCanvasElement>) => {
@@ -183,12 +178,32 @@ export default function EditorCanvas() {
 
         if (mouseOver) {
             const index = (mouseCell.y * artSize.x + mouseCell.x) * 4;
-            const { r, g, b } = hexToRGB(currentColor);
+            
+            switch (editMode) {
+                case EditMode.DRAW:
+                    const { r, g, b } = hexToRGB(currentColor);
 
-            pixels[index + 0] = r;
-            pixels[index + 1] = g;
-            pixels[index + 2] = b;
-            pixels[index + 3] = 255;
+                    pixels[index + 0] = r;
+                    pixels[index + 1] = g;
+                    pixels[index + 2] = b;
+                    pixels[index + 3] = 255;
+                    break;
+                case EditMode.ERASE:
+                    pixels[index + 0] = 0;
+                    pixels[index + 1] = 0;
+                    pixels[index + 2] = 0;
+                    pixels[index + 3] = 0;
+                    break;
+                case EditMode.SAMPLE:
+                    const alpha = pixels[index + 3];
+
+                    if (alpha !== 0) {
+                        pixels[index + 3] = Math.floor(255 / 2);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         const imageCanvas = document.createElement("canvas");

@@ -30,7 +30,8 @@ interface ArtEditorContextType {
   setArtSize: (artSize: {x: number, y: number}) => void;
 
   image: {pixels: Uint8ClampedArray};
-  setPixel: (x: number, y: number, color: string) => void;
+  clearImage: () => void;
+  setPixel: (x: number, y: number, color: string | null) => void;
   getPixel: (x: number, y: number) => string | null;
 };
 
@@ -135,6 +136,10 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const clearImage = () => {
+    setImage({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
+  };
+
   return (
     <ArtEditorContext.Provider value={{
       editMode, setEditMode,
@@ -144,7 +149,8 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
       removeColorFromHistory,
       zoomLevel, setZoomLevel: safeSetZoomLevel,
       artSize, setArtSize: safeSetArtSize,
-      image, setPixel, getPixel
+      image, setPixel, getPixel,
+      clearImage
     }}>
       {children}
     </ArtEditorContext.Provider>
