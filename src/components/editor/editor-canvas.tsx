@@ -73,26 +73,37 @@ export default function EditorCanvas() {
 
         if (!context) return;
 
-        // Draw the grid
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.strokeStyle = "#ffffff";
-        context.lineWidth = 0.5;
-        context.globalAlpha = 1;
+        const gridCavnas = document.createElement("canvas");
+        const gridContext = gridCavnas.getContext("2d")!;
 
+        gridCavnas.width = cellSize.x * 2;
+        gridCavnas.height = cellSize.y * 2;
+        
+        gridContext.strokeStyle = '#ffffff';
+        gridContext.lineWidth = 1;
+        
+        gridContext.translate(0.5, 0.5);
+        gridContext.rect(0, 0, gridCavnas.width, gridCavnas.height);
+        gridContext.stroke();
+        gridContext.translate(-0.5, -0.5);
+        
+        const pattern = context.createPattern(gridCavnas, "repeat")!;
+        const transform = new DOMMatrix();
+        pattern.setTransform(transform.scale(0.5));
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = pattern;
+        // TODO: Fix anti-aliasing problem from above
+        //       causing low opacity with fillRect
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        context.strokeStyle = '#ffffff';
+        context.lineWidth = 1;
         context.translate(0.5, 0.5);
         context.rect(0, 0, canvas.width - 1, canvas.height - 1);
         context.stroke();
-        for (let y = 0; y <= artSize.y; y++) {
-            for (let x = 0; x <= artSize.x; x++) {
-                context.rect(
-                    (x * cellSize.x),
-                    (y * cellSize.y),
-                    (cellSize.x),
-                    (cellSize.y)
-                );
-                context.stroke();
-            }
-        }
         context.translate(-0.5, -0.5);
     };
 
@@ -132,7 +143,6 @@ export default function EditorCanvas() {
         const newCellY = Math.floor(y / cellSize.y);
         
         if (mouseCell.x !== newCellX || mouseCell.y !== newCellY) {
-            // Report mouse cell
             setMouseCell({x: newCellX, y: newCellY});
         }
 
@@ -155,16 +165,16 @@ export default function EditorCanvas() {
         interactWithPixel(newCellX, newCellY);
     };
 
-    const onMouseUp = (event: MouseEvent<HTMLCanvasElement>) => {
+    const onMouseUp = () => {
         setMouseDown(false);        
     };
 
-    const onMouseLeave = (event: MouseEvent<HTMLCanvasElement>) => {
+    const onMouseLeave = () => {
         setMouseDown(false);
         setMouseOver(false);
     };
 
-    const onMouseEnter = (event: MouseEvent<HTMLCanvasElement>) => {
+    const onMouseEnter = () => {
         setMouseOver(true);
     };
 
@@ -217,14 +227,18 @@ export default function EditorCanvas() {
 
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.imageSmoothingEnabled = false;
+
+        context.translate(0.5, 0.5);
         context.drawImage(imageCanvas, 0, 0,
             imageCanvas.width, imageCanvas.height,
             0, 0, canvas.width, canvas.height);
+        context.translate(-0.5, -0.5);
     }, [image, mouseCell]);
 
     return (
         <div className="grid">
             <canvas
+                className="select-none"
                 ref={mainCanvasRef}
                 id="main-canvas"
                 style={{
@@ -234,6 +248,7 @@ export default function EditorCanvas() {
                 }}
             />
             <canvas
+                className="select-none"
                 ref={gridCanvasRef}
                 id="grid-canvas"
                 onMouseMove={onMouseMove}
