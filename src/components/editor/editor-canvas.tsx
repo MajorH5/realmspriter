@@ -7,7 +7,8 @@ import {
     useRef,
     useState,
     useMemo,
-    MouseEvent
+    MouseEvent,
+    TouchEvent
 } from "react";
 
 const MAX_EDITOR_WIDTH = 400;
@@ -31,7 +32,7 @@ export default function EditorCanvas() {
     const gridCanvasRef = useRef<HTMLCanvasElement>(null);
 
     const cellSize = useMemo(() => {
-        const {x: sizeX, y: sizeY } = artSize;
+        const { x: sizeX, y: sizeY } = artSize;
         const canvasWidth = MAX_EDITOR_WIDTH;
         const canvasHeight = (sizeY / sizeX) * MAX_EDITOR_WIDTH;
 
@@ -42,9 +43,9 @@ export default function EditorCanvas() {
     }, [artSize]);
 
     const interactWithPixel = (x: number, y: number) => {
-        switch(editMode) {
+        switch (editMode) {
             case EditMode.DRAW:
-                setPixel(x, y, currentColor);     
+                setPixel(x, y, currentColor);
                 break;
             case EditMode.ERASE:
                 setPixel(x, y, null);
@@ -78,15 +79,15 @@ export default function EditorCanvas() {
 
         gridCavnas.width = cellSize.x * 2;
         gridCavnas.height = cellSize.y * 2;
-        
+
         gridContext.strokeStyle = '#ffffff';
         gridContext.lineWidth = 1;
-        
+
         gridContext.translate(0.5, 0.5);
         gridContext.rect(0, 0, gridCavnas.width, gridCavnas.height);
         gridContext.stroke();
         gridContext.translate(-0.5, -0.5);
-        
+
         const pattern = context.createPattern(gridCavnas, "repeat")!;
         const transform = new DOMMatrix();
         pattern.setTransform(transform.scale(0.5));
@@ -133,23 +134,34 @@ export default function EditorCanvas() {
         return [mouseX, mouseY];
     };
 
-    const onMouseMove = (event: MouseEvent<HTMLCanvasElement>) => {
+    const onMouseMove = ({ clientX, clientY }: { clientX: number, clientY: number }) => {
         const canvas = mainCanvasRef.current;
         if (!canvas) return;
 
-        const [x, y] = normalizeMousePosition(event.clientX, event.clientY, canvas);
+        const [x, y] = normalizeMousePosition(clientX, clientY, canvas);
 
         const newCellX = Math.floor(x / cellSize.x);
         const newCellY = Math.floor(y / cellSize.y);
-        
+
         if (mouseCell.x !== newCellX || mouseCell.y !== newCellY) {
-            setMouseCell({x: newCellX, y: newCellY});
+            setMouseCell({ x: newCellX, y: newCellY });
         }
 
         if (mouseDown) {
             interactWithPixel(newCellX, newCellY);
         }
     };
+
+    const onTouchMove = (event: TouchEvent<HTMLCanvasElement>) => {
+        setMouseDown(true);
+        const changedTouches = event.changedTouches;
+
+        for (let i = 0; i < changedTouches.length; i++) {
+            const { clientX, clientY } = changedTouches[i];
+
+            onMouseMove({ clientX, clientY });
+        }
+    }
 
     const onMouseDown = (event: MouseEvent<HTMLCanvasElement>) => {
         setMouseDown(true);
@@ -161,12 +173,12 @@ export default function EditorCanvas() {
 
         const newCellX = Math.floor(x / cellSize.x);
         const newCellY = Math.floor(y / cellSize.y);
-        
+
         interactWithPixel(newCellX, newCellY);
     };
 
     const onMouseUp = () => {
-        setMouseDown(false);        
+        setMouseDown(false);
     };
 
     const onMouseLeave = () => {
@@ -181,14 +193,14 @@ export default function EditorCanvas() {
     useEffect(() => {
         const canvas = mainCanvasRef.current;
         const context = canvas?.getContext("2d");
-        
+
         if (!canvas || !context) return;
 
         const pixels = image.pixels.slice();
 
         if (mouseOver) {
             const index = (mouseCell.y * artSize.x + mouseCell.x) * 4;
-            
+
             switch (editMode) {
                 case EditMode.DRAW:
                     const { r, g, b } = hexToRGB(currentColor);
@@ -245,6 +257,12 @@ export default function EditorCanvas() {
                     gridRow: "1",
                     gridColumn: "1",
                     backgroundImage: `url(${TransparentTiles.src})`,
+                    WebkitTouchCallout: "none",
+                    WebkitUserSelect: "none",
+                    MozUserSelect: "none",
+                    msUserSelect: "none",
+                    userSelect: "none",
+                    
                 }}
             />
             <canvas
@@ -255,11 +273,17 @@ export default function EditorCanvas() {
                 onMouseDown={onMouseDown}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                onTouchMove={onTouchMove}
                 onMouseUp={onMouseUp}
                 style={{
                     gridRow: "1",
                     gridColumn: "1",
                     zIndex: "1000",
+                    WebkitTouchCallout: "none",
+                    WebkitUserSelect: "none",
+                    MozUserSelect: "none",
+                    msUserSelect: "none",
+                    userSelect: "none",
                 }}
             />
         </div>

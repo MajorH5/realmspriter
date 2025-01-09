@@ -47,7 +47,7 @@ export default function CurrentAccountModal() {
         <Modal
             name="CurrentAccountModal"
             backgroundColor="black"
-            className="!p-0 !border-[1px] w-[400px] h-[315px] overflow-hidden"
+            className="!p-0 !border-[1px] sm:w-[400px] sm:h-[315px] max-h-[315px] overflow-hidden"
         >
             <ModalHeader className="bg-[#4D4D4D] shadow-md w-full">
                 <p className="text-left pl-[10px] py-3 text-base font-light text-[#B5B5B5]">

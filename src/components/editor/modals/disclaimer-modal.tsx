@@ -20,7 +20,7 @@ export default function DisclaimerModal() {
     };
 
     return (
-        <Modal name="DisclaimerModal" className="w-[550px] h-[580px]">
+        <Modal name="DisclaimerModal" className="sm:w-[550px] sm:h-[580px]">
             <ModalHeader>
                 Disclaimer
             </ModalHeader>

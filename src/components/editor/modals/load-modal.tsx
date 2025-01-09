@@ -28,7 +28,7 @@ export default function LoadModal() {
     return (
         <Modal
             name="LoadModal"
-            className="w-[680px] h-[550px]"
+            className="sm:w-[680px] sm:h-[550px]"
             backgroundColor="black"
         >
             <ModalHeader className="w-full flex">
@@ -49,11 +49,11 @@ export default function LoadModal() {
                 </div>
             </ModalBody>
 
-            <ModalFooter className="w-full">
-                <div className="w-full absolute flex">
+            <ModalFooter className="w-full h-full">
+                <div className="relative bg-black h-full w-full">
                     <TextButton
                         onClick={() => { }}
-                        className="m-4"
+                        className="absolute m-1 right-1 bottom-1"
                         disabled={isSearching}
                     >
                         <p className="text-xl">Next</p>

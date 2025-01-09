@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <div className="pb-4 mt-auto text-center font-sans">
+        <div className="pb-4 mt-auto text-center font-sans hidden sm:block">
             <p>
                 <Link target="_blank" href="/legal/terms-of-use">Terms of use</Link>&nbsp;|&nbsp;
                 <Link target="_blank" href="/legal/privacy-policy">Privacy Policy</Link>

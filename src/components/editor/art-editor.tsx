@@ -30,7 +30,7 @@ export default function ArtEditor({
 
     return (
         <div
-            className={`max-w-[880px] max-h-[700px] aspect-[880/700] w-full block overflow-hidden relative ${className || ""}`}
+            className={`w-dvh h-dvh sm:max-w-[880px] sm:max-h-[700px] sm:aspect-[880/700] block overflow-hidden relative ${className || ""}`}
         >
             {/* mute topbar element needs to stay rendered above all else */}
             <EditorTopBar />

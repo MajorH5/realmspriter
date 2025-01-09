@@ -8,7 +8,15 @@ import { Suspense } from "react";
 export default function RealmSpriter() {
     return (
         <div
-            className="flex flex-col min-h-screen overflow-x-hidden bg-black text-white"
+            className="flex flex-col min-h-dvh overflow-x-hidden bg-black text-white touch-none"
+            style={{
+                
+                WebkitTouchCallout: "none",
+                WebkitUserSelect: "none",
+                MozUserSelect: "none",
+                msUserSelect: "none",
+                userSelect: "none",
+            }}
         >
             <div className="flex items-center justify-center">
                 <AudioPlayerProvider>
@@ -22,7 +30,7 @@ export default function RealmSpriter() {
                 </AudioPlayerProvider>
             </div>
 
-            <p className="text-center m-4">
+            <p className="text-center m-4 hidden sm:block">
                 To report issues or give feedback email us at&nbsp;
                 <a target="_blank" href="mailto:feedback@realmspriter.com">feedback@realmspriter.com</a>
                 .

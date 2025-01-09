@@ -105,6 +105,7 @@ export const Modal = ({
         >
             <div
                 className={`
+                w-full h-full
                 flex flex-col space-y-4
                 items-center justify-center
                 min-w-[50px] min-h-[50px]

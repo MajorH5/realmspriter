@@ -15,7 +15,7 @@ export default function WelcomeModal() {
     return (
         <Modal
             name="WelcomeModal"
-            className="w-[400px] h-[240px]"
+            className="sm:w-[400px] sm:h-[240px]"
         >
             <ModalHeader>
                 Welcome
