@@ -25,6 +25,7 @@ export namespace EditMode {
 };
 
 export const MAX_ZOOM_LEVEL = 200;
+export const MIN_ZOOM_LEVEL = 10;
 export const ZOOM_LEVEL_INCREMENT = 10;
 
 export const INITIAL_EDITOR_COLOR = "#ff0000";

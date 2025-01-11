@@ -21,7 +21,8 @@ export default function EditorCanvas() {
         setPixel,
         image,
         editMode,
-        setCurrentColor
+        setCurrentColor,
+        setPreviewImage
     } = useEditor();
     const [mouseCell, setMouseCell] = useState({ x: 0, y: 0 });
     const [mouseDown, setMouseDown] = useState(false);
@@ -245,6 +246,8 @@ export default function EditorCanvas() {
             imageCanvas.width, imageCanvas.height,
             0, 0, canvas.width, canvas.height);
         context.translate(-0.5, -0.5);
+
+        setPreviewImage({pixels});
     }, [image, mouseCell, mouseOver]);
 
     return (

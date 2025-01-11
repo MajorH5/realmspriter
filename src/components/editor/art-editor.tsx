@@ -44,6 +44,7 @@ export default function ArtEditor({
                         <EditorPreview />
                     </div>
                     <EditorColorPicker />
+                    <p className="absolute bottom-1 right-2 font-myriadpro text-[rgba(255,255,255,0.25)]" style={{zIndex: 100}}>v2.0.0</p>
                 </>
             )}
             <ScrollingBackground scale={4} image={RealmTrees} />
