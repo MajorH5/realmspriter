@@ -36,7 +36,7 @@ export default function EditorSideButtons({
             </div>
             <div className="flex flex-col space-y-2">
                 <BorderButton onClick={() => openModal("LoadModal")}>(L)oad</BorderButton>
-                <BorderButton>(S)ave</BorderButton>
+                <BorderButton onClick={() => openModal("SaveModal")}>(S)ave</BorderButton>
                 <BorderButton>E(X)port</BorderButton>
             </div>
         </div >

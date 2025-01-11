@@ -99,8 +99,9 @@ export default function LoadModal() {
                             />
                         </div>
                         <DefaultButton
-                            onClick={() => { }}
+                            onClick={() => loadPage()}
                             className="!px-6 !py-0 h-[32px]"
+                            disabled={isSearching}
                         >
                             Search
                         </DefaultButton>
