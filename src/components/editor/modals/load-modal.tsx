@@ -13,7 +13,13 @@ import { Icons } from "@/resources/images";
 
 function SpriteCell() {
     return (
-        <div className="w-[112px] h-[112px] bg-black">
+        <div
+            className="relative w-[112px] h-[112px] overflow-hidden cursor-pointer hover:bg-[rgba(255,255,255,0.25)]"
+            style={{
+                textShadow: '0px 0px 3px black'
+            }}
+        >
+            <p className="absolute text-sm text-[#999999] bottom-1 whitespace-nowrap pl-1">EnergyStaff</p>
         </div>
     );
 };
@@ -21,11 +27,23 @@ function SpriteCell() {
 export default function LoadModal() {
     const [isSearching, setIsSearching] = useState(false);
 
-    const items = [
+    const [items, setItems] = useState([
         "", "", "", "",
         "", "", "", "",
         "", "", "", "",
-    ];
+    ]);
+
+    const loadPage = () => {
+        if (isSearching) return;
+
+        setItems([]);
+        setIsSearching(true);
+
+        setTimeout(() => {
+            setIsSearching(false);
+            setItems(" ".repeat(12).split(""));
+        }, 500 + 3000 * Math.random());
+    };
 
     return (
         <Modal
@@ -43,18 +61,16 @@ export default function LoadModal() {
                     >
                         X
                     </ModalTrigger>
-                    <div className="relative w-full h-fit flex items-center justify-center space-x-4 mt-2">
-                        <div className="h-[32px] w-[32px]">
-                            <ImageButton
-                                className="block sm:hidden"
-                                title="filters"
-                                totalSpritesX={5}
-                                offset={23}
-                                scale={2}
-                                image={Icons}
-                                onClick={() => { }}
-                            />
-                        </div>
+                    <div className="relative w-full h-fit flex items-center justify-center gap-x-4 mt-2">
+                        <ImageButton
+                            className="block sm:hidden"
+                            title="filters"
+                            totalSpritesX={5}
+                            offset={23}
+                            scale={2}
+                            image={Icons}
+                            onClick={() => { }}
+                        />
                         <div className="hidden sm:block w-fit h-fit font-normal border-[1px] border-[#717171] text-lg">
                             <select name="mode" className="rotmg-dropdown" defaultValue="Community">
                                 <option value="Community">Community</option>
@@ -79,7 +95,7 @@ export default function LoadModal() {
                                 id="tags"
                                 name="tags"
                                 placeholder="tags (comma-separated)"
-                                className="w-full h-full text-base bg-transparent pl-1 border border-[#4f4f4f] placeholder:text-[#7A7A7A] text-[#B5B5B5] font-normal"
+                                className="w-full h-full sm:w-[185px] text-base bg-transparent pl-1 border border-[#4f4f4f] placeholder:text-[#7A7A7A] text-[#B5B5B5] font-normal"
                             />
                         </div>
                         <DefaultButton
@@ -92,31 +108,32 @@ export default function LoadModal() {
                 </div>
             </ModalHeader>
 
-            <ModalBody className="w-full h-full">
-                <div className="w-full h-full flex flex-row space-x-10 flex-wrap justify-center items-center">
+            <ModalBody className="w-full h-full max-h-[1/2] overflow-y-scroll sm:max-h-none sm:overflow-hidden">
+                <div className="w-full h-full flex flex-row gap-x-10 flex-wrap justify-center items-center">
                     {
                         items.map(() => <SpriteCell key={Math.random().toString()} />)
                     }
                 </div>
             </ModalBody>
 
-            <ModalFooter className="w-full h-fit">
-                <div className="relative w-full h-fit">
+            <ModalFooter className="w-full">
+                <div className="relative w-full flex justify-between items-end p-1">
                     <TextButton
-                        onClick={() => { }}
-                        className="absolute m-1 left-1 bottom-1"
+                        onClick={() => loadPage()}
                         disabled={isSearching}
+                        className="pb-1 pl-2"
                     >
                         <p className="text-xl">Previous</p>
                     </TextButton>
                     <TextButton
-                        onClick={() => { }}
-                        className="absolute m-1 right-1 bottom-1"
+                        onClick={() => loadPage()}
                         disabled={isSearching}
+                        className="pb-1 pr-2"
                     >
                         <p className="text-xl">Next</p>
                     </TextButton>
                 </div>
+
             </ModalFooter>
         </Modal>
     );

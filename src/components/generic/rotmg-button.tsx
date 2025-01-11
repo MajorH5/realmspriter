@@ -38,7 +38,9 @@ export const BorderButton = withDefaultClassName(`
 
 export const TextButton = withDefaultClassName(`
                 text-white text-lg font-bold
-                bg-transparent hover:text-[#ffda84]`);
+                bg-transparent
+                hover:text-[#ffda84]
+                disabled:text-gray-400 disabled:hover:text-gray-400 disabled:cursor-not-allowed`);
 
 export const DefaultButton = withDefaultClassName(`
                 bg-white py-1 px-8 text-[#363636]

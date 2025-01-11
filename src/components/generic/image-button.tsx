@@ -40,7 +40,7 @@ export default function ImageButton({
             className={className}
             style={{
                 imageRendering: 'pixelated',
-                transformOrigin: 'top left',
+                // transformOrigin: 'top left',
                 scale: scale,
                 width: size,
                 height: size,
