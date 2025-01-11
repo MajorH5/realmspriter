@@ -10,6 +10,7 @@ type ImageButtonProps = {
     size?: number;
     offset?: number;
     totalSpritesX?: number;
+    className?: string;
 };
 
 export default function ImageButton({
@@ -19,7 +20,8 @@ export default function ImageButton({
     title,
     size = 16,
     offset = 0,
-    totalSpritesX = 1
+    totalSpritesX = 1,
+    className
 }: ImageButtonProps) {
     const { playSfx } = useAudioPlayer();
 
@@ -35,6 +37,7 @@ export default function ImageButton({
         <button
             title={title}
             onClick={handleClick}
+            className={className}
             style={{
                 imageRendering: 'pixelated',
                 transformOrigin: 'top left',
