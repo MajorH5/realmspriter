@@ -5,6 +5,7 @@ import SignInModal from "./sign-in-modal";
 import SignUpModal from "./sign-up-modal";
 import LoadModal from "./load-modal";
 import SaveModal from "./save-modal";
+import ExportModal from "./export-modal";
 
 export default function () {
     return (
@@ -19,6 +20,7 @@ export default function () {
                 <SignUpModal />
                 <LoadModal />
                 <SaveModal />
+                <ExportModal />
             </div>
         </>
     );

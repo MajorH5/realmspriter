@@ -3,7 +3,7 @@
 import { OnScreenModal } from "@/types/modal-types";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-const InitialModal: OnScreenModal | null = "SaveModal";
+const InitialModal: OnScreenModal | null = "WelcomeModal";
 
 interface ModalContextType {
     activeModal: OnScreenModal | null;
