@@ -11,11 +11,7 @@ export async function authLogin(email: string, password: string): Promise<LoginR
 };
 
 export async function authLogout(): Promise<APIResponse<null>> {
-    return api("auth/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-    });
+    return api("auth/logout", { method: "GET" });
 };
 
 export type VerificationAction = "resend" | "verify";
