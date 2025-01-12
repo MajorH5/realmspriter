@@ -29,8 +29,6 @@ export default function EditorPreview() {
             canvas.width = CANVAS_WIDTH - 2;
             canvas.height = CANVAS_HEIGHT - 2;
         }
-
-        console.log("ran")
     }, []);
 
     useEffect(() => {

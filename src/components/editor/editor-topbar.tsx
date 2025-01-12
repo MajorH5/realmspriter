@@ -70,7 +70,7 @@ export default function EditorTopBar() {
                 </div>
                 {shouldRenderToolbarButtons &&
                     <div className="flex flex-row justify-end items-end w-full font-myriadpro px-2 space-x-2">
-                        <span className="text-[#cccccc] opacity-50 text-lg">{user !== null ? `logged in as ${user.email} - ` : "guest account - "}</span>
+                        <span className="text-[#cccccc] opacity-50 text-lg whitespace-nowrap">{user !== null ? `logged in as ${user.email} - ` : "guest account - "}</span>
                         <TextButton
                             className="hover:text-[#ffff00]"
                             onClick={() => user !== null ? openModal("CurrentAccountModal") : openModal("SignUpModal")}
@@ -88,10 +88,9 @@ export default function EditorTopBar() {
             </div>
 
             {shouldRenderToolbarButtons &&
-                // TODO: Custom dropdown element
-                <div className="flex flex-row justify-center items-center mt-2 z-30 font-myriadpro">
+                <div className="flex flex-row justify-center items-center gap-4 pl-12 mt-2 z-30 font-myriadpro">
                     <label htmlFor="mode" className="text-[#dddddd] text-lg"><b>Mode:</b></label>
-                    <div className="w-fit h-fit border-[2px] mx-4 rounded-sm border-[#696A68] text-lg">
+                    <div className="w-fit h-fit border-[2px] rounded-sm border-[#696A68] text-lg">
                         <select name="mode" className="rotmg-dropdown" defaultValue={SpriteMode.OBJECTS}>
                             <option value={SpriteMode.OBJECTS}>Objects</option>
                             <option value={SpriteMode.CHARACTERS}>Characters</option>
@@ -100,7 +99,7 @@ export default function EditorTopBar() {
                     </div>
 
                     <label htmlFor="size" className="text-[#dddddd] text-lg"><b>Size:</b></label>
-                    <div className="w-fit h-fit border-[2px] mx-4 rounded-sm border-[#696A68] text-lg">
+                    <div className="w-fit h-fit border-[2px] rounded-sm border-[#696A68] text-lg">
                         <select name="mode" className="rotmg-dropdown" defaultValue="8x8" onChange={onSpriteSizeChanged}>
                             <option data-width="8" data-height="8">8 x 8</option>
                             <option data-width="16" data-height="8">16 x 8</option>

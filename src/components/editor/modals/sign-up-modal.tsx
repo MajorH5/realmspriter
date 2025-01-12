@@ -11,22 +11,21 @@ import {
 } from "../../generic/modal";
 import { TextButton } from "@/components/generic/rotmg-button";
 import { useModal } from "@/context/modal-context";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function SignUpModal() {
     const { openModal } = useModal();
-    const { register } = useAuth();
+    const { register, isPerformingAuthEvent } = useAuth();
 
     const [error, setError] = useState<string | null>(null);
-    const [isSigningUp, setSigningUp] = useState(false);
-
+    
     const formRef = useRef<HTMLFormElement | null>(null);
-
+    const recaptchaRef = useRef<ReCAPTCHA | null>(null);
+    
     const onSignUp = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (isSigningUp) return;
-
-        setSigningUp(true);
+        if (isPerformingAuthEvent || !recaptchaRef.current) return;
 
         const formData = new FormData(formRef.current!);
 
@@ -52,19 +51,16 @@ export default function SignUpModal() {
         setError(error);
 
         if (error !== null) {
-            setSigningUp(false);
             return;
         }
 
-        const result = await register(username, email, password);
+        const result = await register(email, username, password, recaptchaRef.current);
 
-        if (result === null) {
-            setError("An error occred while creating your account!");
+        if (!result.success) {
+            setError(result.message);
         } else {
             openModal("CurrentAccountModal");
         }
-
-        setSigningUp(false);
     };
 
     return (
@@ -92,6 +88,7 @@ export default function SignUpModal() {
                             name="username"
                             placeholder="username"
                             className="w-full max-w-[280px] bg-transparent pl-1 border-2 border-[#4f4f4f] placeholder:text-[#7A7A7A] font-normal"
+                            disabled={isPerformingAuthEvent}
                         />
                     </p>
                     <p>
@@ -105,6 +102,7 @@ export default function SignUpModal() {
                             name="email"
                             placeholder="example@domain.com"
                             className="w-full max-w-[280px] bg-transparent pl-1 border-2 border-[#4f4f4f] placeholder:text-[#7A7A7A] font-normal"
+                            disabled={isPerformingAuthEvent}
                         />
                     </p>
                     <p>
@@ -118,6 +116,7 @@ export default function SignUpModal() {
                             name="password"
                             placeholder="password"
                             className="w-full max-w-[280px] bg-transparent pl-1 border-2 border-[#4f4f4f] placeholder:text-[#7A7A7A] font-normal"
+                            disabled={isPerformingAuthEvent}
                         />
                     </p>
                     <p>
@@ -131,8 +130,14 @@ export default function SignUpModal() {
                             name="retype-password"
                             placeholder="password"
                             className="w-full max-w-[280px] bg-transparent pl-1 border-2 border-[#4f4f4f] placeholder:text-[#7A7A7A] font-normal"
+                            disabled={isPerformingAuthEvent}
                         />
                     </p>
+                    <ReCAPTCHA
+                        size="invisible"
+                        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY!}
+                        ref={recaptchaRef}
+                    />
                 </form>
 
                 <div className="mt-4 w-fit"
@@ -159,7 +164,7 @@ export default function SignUpModal() {
                 <TextButton
                     onClick={() => formRef.current?.requestSubmit()}
                     className="m-4"
-                    disabled={isSigningUp}
+                    disabled={isPerformingAuthEvent}
                 >
                     <p className="text-2xl">Register</p>
                 </TextButton>

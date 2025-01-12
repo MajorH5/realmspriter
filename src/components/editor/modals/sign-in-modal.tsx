@@ -10,28 +10,26 @@ import {
 } from "../../generic/modal";
 import { TextButton } from "@/components/generic/rotmg-button";
 import { useModal } from "@/context/modal-context";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function SignInModal() {
     const { openModal } = useModal();
-    const { login } = useAuth();
+    const { login, isPerformingAuthEvent } = useAuth();
 
     const [error, setError] = useState<string | null>(null);
-    const [isSigningIn, setSigningIn] = useState(false);
 
     const formRef = useRef<HTMLFormElement | null>(null);
+    const recaptchaRef = useRef<ReCAPTCHA | null>(null);
 
     const onSignIn = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (isSigningIn) return;
-
-        setSigningIn(true);
+        if (isPerformingAuthEvent || !recaptchaRef.current) return;
 
         const formData = new FormData(formRef.current!);
 
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-
         const emailInput = document.getElementById("email") as HTMLInputElement;
 
         let error = null;
@@ -43,21 +41,18 @@ export default function SignInModal() {
         }
 
         setError(error);
-        
+
         if (error !== null) {
-            setSigningIn(false);
             return;
         }
 
-        const result = await login(email, password);
+        const result = await login(email, password, recaptchaRef.current);
 
-        if (result === null) {
-            setError("Invalid email or password");
+        if (!result.success) {
+            setError(result.message);
         } else {
             openModal("CurrentAccountModal");
         }
-
-        setSigningIn(false);
     };
 
     return (
@@ -85,6 +80,7 @@ export default function SignInModal() {
                             name="email"
                             placeholder="example@domain.com"
                             className="w-full max-w-[280px] bg-transparent pl-1 border-2 border-[#4f4f4f] placeholder:text-[#7A7A7A] font-normal"
+                            disabled={isPerformingAuthEvent}
                         />
                     </p>
                     <p>
@@ -98,8 +94,14 @@ export default function SignInModal() {
                             name="password"
                             placeholder="password"
                             className="w-full max-w-[280px] bg-transparent pl-1 border-2 border-[#4f4f4f] placeholder:text-[#7A7A7A] font-normal"
+                            disabled={isPerformingAuthEvent}
                         />
                     </p>
+                    <ReCAPTCHA
+                        size="invisible"
+                        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY!}
+                        ref={recaptchaRef}
+                    />
                 </form>
 
                 <div className="mt-4 w-fit"
@@ -123,6 +125,7 @@ export default function SignInModal() {
                 <TextButton
                     onClick={() => formRef.current?.requestSubmit()}
                     className="m-4"
+                    disabled={isPerformingAuthEvent}
                 >
                     <p className="text-2xl">Sign in</p>
                 </TextButton>

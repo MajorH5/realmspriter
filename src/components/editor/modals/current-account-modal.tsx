@@ -32,14 +32,14 @@ export default function CurrentAccountModal() {
     };
 
     const verifyAccount = async () => {
-        if (sendingEmail || emailSent || user?.accountVerified) return;
+        if (sendingEmail || emailSent || user?.email_verified) return;
 
         const result = await resendVerificationEmail();
 
-        if (result) {
-            setMessage("Verification email sent");
+        if (result !== null) {
+            setMessage(result.message);
         } else {
-            setMessage("Too many verification requests. Try again later");
+            setMessage("An unknown error has occured");
         }
     };
 
@@ -67,7 +67,7 @@ export default function CurrentAccountModal() {
                         className={`text-sm ${(sendingEmail || emailSent) ? "text-[#888888]" : "hover:text-[#ffda84]"} cursor-default`}
                         onClick={() => verifyAccount()}
                     >
-                        {!user?.accountVerified ? (emailSent ? "Sent..." : "Email not verified. Click here to resend email") : ""}&nbsp;
+                        {!user?.email_verified ? (emailSent ? "Sent..." : "Email not verified. Click here to resend email") : ""}&nbsp;
                     </p>
                     <p className="text-sm hover:text-[#ffda84] cursor-default" onClick={() => closeModal()}>Click here to change password</p>
                     <p className="text-sm hover:text-[#ffda84] cursor-default" onClick={() => (logout(), closeModal())}>Not you? Click here to log out</p>

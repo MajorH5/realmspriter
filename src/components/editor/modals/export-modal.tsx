@@ -19,7 +19,7 @@ export default function ExportModal() {
 
             <ModalBody className="flex flex-col gap-5 px-8 w-full h-full">
                 <div className="flex gap-5 w-full">
-                    <label htmlFor="name" className="font-bold text-xl w-1/2">Format:</label>
+                    <label title="Format for exported sprites" htmlFor="name" className="font-bold text-xl w-1/2">Format:</label>
                     <div className="w-full h-fit font-normal border-[1px] border-[#717171] text-lg">
                         <select name="mode" className="rotmg-dropdown w-full" defaultValue="PNG" onChange={(e) =>  setGifDisabled(e.target.value === "PNG")}>
                             <option value="PNG">PNG</option>
@@ -28,7 +28,7 @@ export default function ExportModal() {
                     </div>
                 </div>
                 {!gifDisabled && <div className="flex gap-5 w-full">
-                    <label htmlFor="name" className="font-bold text-xl w-1/2 whitespace-nowrap">GIF Delay:</label>
+                    <label title="Delay between each frame in the export GIF" htmlFor="name" className="font-bold text-xl w-1/2 whitespace-nowrap">GIF Delay:</label>
                     <div className="w-full h-fit font-normal border-[1px] border-[#717171] text-lg">
                         <select name="mode" className="rotmg-dropdown w-full" defaultValue="Any Type" onChange={() => { }}>
                             {
@@ -40,7 +40,7 @@ export default function ExportModal() {
                     </div>
                 </div>}
                 <div className="flex gap-5 w-full h-full">
-                    <label htmlFor="name" className="font-bold text-xl w-1/2">RotMGify:</label>
+                    <label title="Apply outline and shadows to sprites" htmlFor="name" className="font-bold text-xl w-1/2">RotMGify:</label>
                     <div className="w-full max-h-[30px] flex items-center justify-center">
                         <input
                             type="checkbox"
