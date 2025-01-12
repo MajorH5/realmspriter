@@ -11,6 +11,8 @@ type ImageButtonProps = {
     offset?: number;
     totalSpritesX?: number;
     className?: string;
+    children?: React.ReactNode;
+    asChild?: boolean
 };
 
 export default function ImageButton({
@@ -21,7 +23,9 @@ export default function ImageButton({
     size = 16,
     offset = 0,
     totalSpritesX = 1,
-    className
+    className,
+    children,
+    asChild
 }: ImageButtonProps) {
     const { playSfx } = useAudioPlayer();
 
@@ -46,6 +50,8 @@ export default function ImageButton({
                 height: size,
                 background: `url("${image.src}") ${-xOffset}px ${-yOffset}px`
             }}
-        />
+        >
+            {children}
+        </button>
     );
 }

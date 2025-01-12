@@ -16,7 +16,7 @@ export default function EditorSideButtons({
     };
 
     return (
-        <div className={`flex flex-col max-w-[300px] absolute z-40 space-y-10 ${className || ""}`}>
+        <div className={`hidden sm:flex flex-col max-w-[300px] absolute z-40 space-y-10 ${className || ""}`}>
             <div className="flex flex-col space-y-2">
                 <BorderButton onClick={() => setEditMode(EditMode.DRAW)} className={getSelectStyle(EditMode.DRAW)}>
                     (D)raw

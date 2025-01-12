@@ -1,26 +1,14 @@
 import { useEditor } from "@/context/art-editor-context";
-import { useEffect, useRef, useState, WheelEvent } from "react";
+import { useEffect, useRef, WheelEvent } from "react";
 import { BorderButton } from "../generic/rotmg-button";
 import { RotMGify } from "@/utils/utility";
-import { MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, ZOOM_LEVEL_INCREMENT } from "@/utils/constants";
 
 const CANVAS_WIDTH = 300;
 const CANVAS_HEIGHT = 400;
 
 export default function EditorPreview() {
-    const { previewImage, artSize } = useEditor();
+    const { previewImage, artSize, zoomLevel, zoomIn, zoomOut } = useEditor();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [zoomLevel, setZoomLevel] = useState(100);
-
-    const safeSetZoomLevel = (zoomLevel: number) => {
-        if (zoomLevel < MIN_ZOOM_LEVEL) {
-            zoomLevel = MIN_ZOOM_LEVEL;
-        } else if (zoomLevel > MAX_ZOOM_LEVEL) {
-            zoomLevel = MAX_ZOOM_LEVEL
-        }
-
-        setZoomLevel(zoomLevel);
-    };
 
     useEffect(() => {
         const { current: canvas } = canvasRef;
@@ -64,23 +52,25 @@ export default function EditorPreview() {
 
     const onWheel = (event: WheelEvent<HTMLCanvasElement>) => {
         const direction = Math.sign(event.deltaY) * -1;
-        safeSetZoomLevel(zoomLevel + direction * ZOOM_LEVEL_INCREMENT);
+
+        if (direction < 0) zoomOut();
+        if (direction > 0) zoomIn();
     };
 
     return (
-        <div className="relative border border-white w-[300px] h-[400px] bg-[#808080]">
+        <div className="block sm:block relative border border-white w-[300px] h-[400px] bg-[#808080]">
             <div className="absolute w-full flex justify-between p-2">
                 <p className="font-white text-white font-myriadpro font-light"><b>{zoomLevel.toString()}%</b></p>
                 <div className="h-full flex gap-2">
                     <BorderButton
                         className="!border-[1px] !p-0 w-[16px] h-[16px] text-md text-center"
-                        onClick={() => safeSetZoomLevel(zoomLevel - 10)}
+                        onClick={() => zoomOut()}
                     >
                         -
                     </BorderButton>
                     <BorderButton
                         className="!border-[1px] !p-0 w-[16px] h-[16px] text-md text-center"
-                        onClick={() => safeSetZoomLevel(zoomLevel + 10)}
+                        onClick={() => zoomIn()}
                     >
                         +
                     </BorderButton>

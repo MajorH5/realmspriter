@@ -10,6 +10,8 @@ import EditorSideButtons from "./editor-side-buttons";
 import EditorColorPicker from "./colors/editor-color-picker";
 import EditorCanvas from "./editor-canvas";
 import EditorPreview from "./editor-preview";
+import EditorNavbar from "./editor-navbar";
+import { useEditor } from "@/context/art-editor-context";
 
 type ArtEditorProps = {
     className?: string
@@ -27,6 +29,7 @@ export default function ArtEditor({
     className
 }: ArtEditorProps) {
     const { activeModal } = useModal();
+    const { zoomIn, zoomOut } = useEditor();
 
     return (
         <div
@@ -38,13 +41,30 @@ export default function ArtEditor({
                 <EditorModals />
             ) : (
                 <>
+                    <div className="relative sm:hidden">
+                        <div className="absolute top-12 right-4 flex flex-col space-y-2 z-50">
+                            <button
+                                className="w-12 h-12 bg-[#363636] border border-white text-white rounded-full flex items-center justify-center"
+                                onClick={zoomIn}
+                            >
+                                <span className="text-xl">+</span>
+                            </button>
+                            <button
+                                className="w-12 h-12 bg-[#363636] border border-white text-white rounded-full flex items-center justify-center"
+                                onClick={zoomOut}
+                            >
+                                <span className="text-xl">-</span>
+                            </button>
+                        </div>
+                    </div>
                     <EditorSideButtons className="ml-4 mt-12" />
-                    <div className="left-1/2 translate-x-[-41.5%] top-1/2 translate-y-[-53.5%] flex flex-row justify-end items-center z-30  absolute space-x-5">
+                    <EditorNavbar />
+                    <div className="flex sm:flex left-1/2 translate-x-[-41.5%] top-1/2 translate-y-[-53.5%] flex-row justify-end items-center z-30 absolute gap-5">
                         <EditorCanvas />
                         <EditorPreview />
                     </div>
                     <EditorColorPicker />
-                    <p className="absolute bottom-1 right-2 font-myriadpro text-[rgba(255,255,255,0.25)]" style={{zIndex: 100}}>v2.0.0</p>
+                    <p className="absolute bottom-1 right-2 font-myriadpro text-[rgba(255,255,255,0.25)]" style={{ zIndex: 100 }}>v2.0.0</p>
                 </>
             )}
             <ScrollingBackground scale={4} image={RealmTrees} />

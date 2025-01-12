@@ -11,7 +11,11 @@ module.exports = {
 
       dropShadow: {
         'lg': '0 0 2px rgba(0, 0, 0, 1)',
-      }
+      },
+
+      screens: {
+        'sm': { raw: '(min-width: 640px) and (min-height: 700px)' },
+      },
     },
   },
   plugins: [],

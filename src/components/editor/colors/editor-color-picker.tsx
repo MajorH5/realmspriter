@@ -28,7 +28,7 @@ export default function EditorColorPicker() {
     }, [currentColor])
 
     return (
-        <div className="absolute left-1/2 translate-x-[-50%] bottom-3 flex flex-col justify-center items-center space-y-3 z-40">
+        <div className="hidden sm:flex absolute left-1/2 translate-x-[-50%] bottom-3 flex-col justify-center items-center space-y-3 z-40">
             <div className="flex flex-wrap justify-center items-center max-w-[180px] gap-2">
                 {colorHistory.map((color) => (
                     <button

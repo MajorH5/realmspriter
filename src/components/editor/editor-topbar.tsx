@@ -10,7 +10,7 @@ import ImageButton from "../generic/image-button";
 import { TextButton } from "../generic/rotmg-button";
 import { SpriteMode, SpriteSize } from "@/utils/constants";
 import { useEditor } from "@/context/art-editor-context";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useMemo } from "react";
 
 export default function EditorTopBar() {
     const { userMusicEnabled, muteMusic, unmuteMusic } = useAudioPlayer();
@@ -18,6 +18,7 @@ export default function EditorTopBar() {
     const { user, logout } = useAuth();
     const { artSize, setArtSize } = useEditor();
 
+    const isLoggedIn = useMemo(() => user !== null, [user]);
     const shouldRenderToolbarButtons = !activeModal;
 
     const onSpriteSizeChanged = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -28,9 +29,9 @@ export default function EditorTopBar() {
     };
 
     return (
-        <div className="absolute flex flex-col w-full z-40">
-            <div className="flex w-full p-1">
-                <div className="flex space-x-6 pl-3 pt-2">
+        <div className="absolute flex flex-col w-full">
+            <div className="flex p-1">
+                <div className="flex space-x-6 pl-3 pt-2 z-40">
                     <ImageButton
                         title={userMusicEnabled ? "Mute music" : "Unmute music"}
                         totalSpritesX={5}
@@ -69,26 +70,48 @@ export default function EditorTopBar() {
                     }
                 </div>
                 {shouldRenderToolbarButtons &&
-                    <div className="flex flex-row justify-end items-end w-full font-myriadpro px-2 space-x-2">
-                        <span className="text-[#cccccc] opacity-50 text-lg whitespace-nowrap">{user !== null ? `logged in as ${user.email} - ` : "guest account - "}</span>
-                        <TextButton
-                            className="hover:text-[#ffff00]"
-                            onClick={() => user !== null ? openModal("CurrentAccountModal") : openModal("SignUpModal")}
-                        >
-                            {user !== null ? "account" : "register"}
-                        </TextButton>
-                        <TextButton
-                            className="hover:text-[#ffff00]"
-                            onClick={() => user !== null ? logout() : openModal("SignInModal")}
-                        >
-                            {user !== null ? "log out" : "log in"}
-                        </TextButton>
+                    <div className="flex flex-row justify-end items-end w-full font-myriadpro pr-2 z-40">
+                        <div className="w-[70px] h-[32px] flex justify-end items-center gap-5 sm:hidden">
+                            {isLoggedIn &&
+                                <ImageButton
+                                    title="account"
+                                    totalSpritesX={5}
+                                    offset={24}
+                                    scale={2}
+                                    image={Icons}
+                                    onClick={() => openModal("CurrentAccountModal")}
+                                />
+                            }
+                            <ImageButton
+                                title={isLoggedIn ? "log out" : "log in"}
+                                totalSpritesX={5}
+                                offset={isLoggedIn ? 20 : 25}
+                                scale={2}
+                                image={Icons}
+                                onClick={() => isLoggedIn ? logout() : openModal("SignInModal")}
+                            />
+                        </div>
+                        <div className="gap-2 hidden sm:flex">
+                            <span className="text-[#cccccc] opacity-50 text-lg whitespace-nowrap">{isLoggedIn ? `logged in as ${user!.email} -` : "guest account -"}</span>
+                            <TextButton
+                                className="hover:text-[#ffff00]"
+                                onClick={() => isLoggedIn ? openModal("CurrentAccountModal") : openModal("SignUpModal")}
+                            >
+                                {isLoggedIn ? "account" : "register"}
+                            </TextButton>
+                            <TextButton
+                                className="hover:text-[#ffff00]"
+                                onClick={() => isLoggedIn ? logout() : openModal("SignInModal")}
+                            >
+                                {isLoggedIn ? "log out" : "log in"}
+                            </TextButton>
+                        </div>
                     </div>
                 }
             </div>
 
             {shouldRenderToolbarButtons &&
-                <div className="flex flex-row justify-center items-center gap-4 pl-12 mt-2 z-30 font-myriadpro">
+                <div className="hidden sm:flex flex-row justify-center items-center gap-4 pl-12 mt-2 z-30 font-myriadpro">
                     <label htmlFor="mode" className="text-[#dddddd] text-lg"><b>Mode:</b></label>
                     <div className="w-fit h-fit border-[2px] rounded-sm border-[#696A68] text-lg">
                         <select name="mode" className="rotmg-dropdown" defaultValue={SpriteMode.OBJECTS}>

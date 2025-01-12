@@ -7,7 +7,10 @@ import {
   INITIAL_EDITOR_COLOR,
   INITIAL_COLOR_HISTORY,
   INITIAL_ART_SIZE,
-  MAX_ART_SIZE
+  MAX_ART_SIZE,
+  MIN_ZOOM_LEVEL,
+  MAX_ZOOM_LEVEL,
+  ZOOM_LEVEL_INCREMENT
 } from "@/utils/constants";
 import { hexToRGB, RGBtohex } from "@/utils/utility";
 
@@ -24,6 +27,11 @@ interface ArtEditorContextType {
 
   artSize: { x: number, y: number };
   setArtSize: (artSize: { x: number, y: number }) => void;
+
+  zoomLevel: number;
+  setZoomLevel: (zoomLevel: number) => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
 
   image: { pixels: Uint8ClampedArray };
   previewImage: { pixels: Uint8ClampedArray } | null;
@@ -42,7 +50,8 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const [colorHistory, setColorHistory] = useState(INITIAL_COLOR_HISTORY);
   const [artSize, setArtSize] = useState<{ x: number, y: number }>(INITIAL_ART_SIZE);
   const [image, setImage] = useState({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
-  const [previewImage, setPreviewImage] = useState<{pixels: Uint8ClampedArray } | null>(null);
+  const [previewImage, setPreviewImage] = useState<{ pixels: Uint8ClampedArray } | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(100);
 
   const addColorToHistory = (color: string) => {
     const index = colorHistory.findIndex((i) => color === i);
@@ -130,6 +139,19 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     setPreviewImage(null);
   };
 
+  const safeSetZoomLevel = (zoomLevel: number) => {
+    if (zoomLevel < MIN_ZOOM_LEVEL) {
+      zoomLevel = MIN_ZOOM_LEVEL;
+    } else if (zoomLevel > MAX_ZOOM_LEVEL) {
+      zoomLevel = MAX_ZOOM_LEVEL
+    }
+
+    setZoomLevel(zoomLevel);
+  };
+
+  const zoomIn = () => safeSetZoomLevel(zoomLevel + ZOOM_LEVEL_INCREMENT);
+  const zoomOut = () => safeSetZoomLevel(zoomLevel - ZOOM_LEVEL_INCREMENT);
+
   return (
     <ArtEditorContext.Provider value={{
       editMode, setEditMode,
@@ -140,7 +162,9 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
       artSize, setArtSize: safeSetArtSize,
       image, setPixel, getPixel,
       previewImage, setPreviewImage,
-      clearImage
+      clearImage,
+      zoomLevel, setZoomLevel: safeSetZoomLevel,
+      zoomIn, zoomOut
     }}>
       {children}
     </ArtEditorContext.Provider>
