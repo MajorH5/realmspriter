@@ -96,6 +96,14 @@ export default function LoadModal() {
                                 name="tags"
                                 placeholder="tags (comma-separated)"
                                 className="w-full h-full sm:w-[185px] text-base bg-transparent pl-1 border border-[#4f4f4f] placeholder:text-[#7A7A7A] text-[#B5B5B5] font-normal"
+                                onSubmit={() => loadPage()}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        // @ts-ignore
+                                        e.target.blur();
+                                        loadPage();
+                                    }
+                                }}
                             />
                         </div>
                         <DefaultButton
@@ -110,11 +118,20 @@ export default function LoadModal() {
             </ModalHeader>
 
             <ModalBody className="w-full h-full max-h-[1/2] overflow-y-scroll sm:max-h-none sm:overflow-hidden">
-                <div className="w-full h-full flex flex-row gap-x-10 flex-wrap justify-center items-center">
-                    {
-                        items.map(() => <SpriteCell key={Math.random().toString()} />)
-                    }
-                </div>
+                {isSearching ?
+                    (
+                        <div className="w-full h-full flex justify-center items-center font-bold">
+                            <p>Loading...</p>
+                        </div>
+                    ) :
+                    (
+                        <div className="w-full h-full flex flex-row gap-x-10 flex-wrap justify-center items-center">
+                            {
+                                items.map(() => <SpriteCell key={Math.random().toString()} />)
+                            }
+                        </div>
+                    )
+            }
             </ModalBody>
 
             <ModalFooter className="w-full">
