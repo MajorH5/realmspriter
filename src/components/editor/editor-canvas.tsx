@@ -10,6 +10,7 @@ import {
     MouseEvent,
     TouchEvent
 } from "react";
+import { BorderButton } from "../generic/rotmg-button";
 
 const MAX_EDITOR_WIDTH = 400;
 
@@ -247,11 +248,18 @@ export default function EditorCanvas() {
             0, 0, canvas.width, canvas.height);
         context.translate(-0.5, -0.5);
 
-        setPreviewImage({pixels});
+        setPreviewImage({ pixels });
     }, [image, mouseCell, mouseOver]);
 
     return (
-        <div className="grid">
+        <div className="grid relative">
+            <div className="absolute flex gap-1 justify-center w-full h-[30px] -top-10 whitespace-nowrap">
+                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Stand</BorderButton>
+                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Walk 1</BorderButton>
+                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Walk 2</BorderButton>
+                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Attack 1</BorderButton>
+                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Attack 2</BorderButton>
+            </div>
             <canvas
                 className="select-none"
                 ref={mainCanvasRef}
@@ -265,7 +273,7 @@ export default function EditorCanvas() {
                     MozUserSelect: "none",
                     msUserSelect: "none",
                     userSelect: "none",
-                    
+
                 }}
             />
             <canvas

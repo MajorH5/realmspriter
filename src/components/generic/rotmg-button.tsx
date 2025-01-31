@@ -29,7 +29,7 @@ const withDefaultClassName = (defaultClass: string) => {
 };
 
 export const BorderButton = withDefaultClassName(`
-                py-[2px] pl-3 pr-6 text-white
+                text-white
                 border-[2px] bg-transparent
                 hover:bg-[rgba(255,255,255,0.5)]
                 active:bg-transparent

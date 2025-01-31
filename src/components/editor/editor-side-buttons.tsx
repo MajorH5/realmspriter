@@ -18,26 +18,32 @@ export default function EditorSideButtons({
     return (
         <div className={`hidden sm:flex flex-col max-w-[300px] absolute z-40 space-y-10 ${className || ""}`}>
             <div className="flex flex-col space-y-2">
-                <BorderButton onClick={() => setEditMode(EditMode.DRAW)} className={getSelectStyle(EditMode.DRAW)}>
+                <BorderButton
+                    onClick={() => setEditMode(EditMode.DRAW)}
+                    className={`py-[2px] pl-3 pr-6 ${getSelectStyle(EditMode.DRAW)}`}>
                     (D)raw
                 </BorderButton>
 
-                <BorderButton onClick={() => setEditMode(EditMode.ERASE)}  className={getSelectStyle(EditMode.ERASE)}>
+                <BorderButton
+                    onClick={() => setEditMode(EditMode.ERASE)}
+                    className={`py-[2px] pl-3 pr-6 ${getSelectStyle(EditMode.ERASE)}`}>
                     (E)rase
                 </BorderButton>
 
-                <BorderButton onClick={() => setEditMode(EditMode.SAMPLE)}  className={getSelectStyle(EditMode.SAMPLE)}>
+                <BorderButton
+                    onClick={() => setEditMode(EditMode.SAMPLE)}
+                    className={`py-[2px] pl-3 pr-6 ${getSelectStyle(EditMode.SAMPLE)}`}>
                     S(A)mple
                 </BorderButton>
 
-                <BorderButton>(U)ndo</BorderButton>
-                <BorderButton>(R)edo</BorderButton>
-                <BorderButton onClick={clearImage}>(C)lear</BorderButton>
+                <BorderButton className="py-[2px] pl-3 pr-6">(U)ndo</BorderButton>
+                <BorderButton className="py-[2px] pl-3 pr-6">(R)edo</BorderButton>
+                <BorderButton onClick={clearImage} className="py-[2px] pl-3 pr-6">(C)lear</BorderButton>
             </div>
             <div className="flex flex-col space-y-2">
-                <BorderButton onClick={() => openModal("LoadModal")}>(L)oad</BorderButton>
-                <BorderButton onClick={() => openModal("SaveModal")}>(S)ave</BorderButton>
-                <BorderButton onClick={() => openModal("ExportModal")}>E(X)port</BorderButton>
+                <BorderButton onClick={() => openModal("LoadModal")} className="py-[2px] pl-3 pr-6">(L)oad</BorderButton>
+                <BorderButton onClick={() => openModal("SaveModal")} className="py-[2px] pl-3 pr-6">(S)ave</BorderButton>
+                <BorderButton onClick={() => openModal("ExportModal")} className="py-[2px] pl-3 pr-6">E(X)port</BorderButton>
             </div>
         </div >
     );
