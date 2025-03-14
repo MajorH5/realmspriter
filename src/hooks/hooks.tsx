@@ -1,5 +1,6 @@
 // https://stackoverflow.com/questions/75594366/react-useapi-hook-results-in-endless-loop-when-used-in-useeffect
-import { DependencyList, useState, useEffect } from "react";
+import { DependencyList, RefObject, useState, useEffect } from "react";
+import { normalizeMousePosition } from "@/utils/utility";
 
 type UseAsyncHookState<T> = {
     loading: boolean,
@@ -20,5 +21,54 @@ function useAsync<T>(func:() => Promise<T>, deps: DependencyList) {
 
   return state;
 };
+
+interface MouseTrackerOptions {
+    onMove?: (x: number, y: number) => void;
+    onDown?: (x: number, y: number) => void;
+    onUp?: () => void;
+}
+
+export function useMouseTracker(
+    canvasRef: RefObject<HTMLCanvasElement>,
+    { onMove, onDown, onUp }: MouseTrackerOptions
+) {
+    const [mouseDown, setMouseDown] = useState(false);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const handleMouseDown = (event: MouseEvent) => {
+            const [x, y] = normalizeMousePosition(event.clientX, event.clientY, canvas);
+            setMouseDown(true);
+            onDown?.(x, y);
+        };
+
+        const handleMouseMove = (event: MouseEvent) => {
+            if (!mouseDown) return;
+            const [x, y] = normalizeMousePosition(event.clientX, event.clientY, canvas);
+            const clampedX = Math.max(0, Math.min(x, canvas.width));
+            const clampedY = Math.max(0, Math.min(y, canvas.height));
+            onMove?.(clampedX, clampedY);
+        };
+
+        const handleMouseUp = () => {
+            setMouseDown(false);
+            onUp?.();
+        };
+
+        canvas.addEventListener("mousedown", handleMouseDown);
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+
+        return () => {
+            canvas.removeEventListener("mousedown", handleMouseDown);
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+        };
+    }, [canvasRef, mouseDown, onMove, onDown, onUp]);
+
+    return { mouseDown };
+}
 
 export { useAsync };

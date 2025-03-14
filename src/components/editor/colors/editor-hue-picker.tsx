@@ -1,14 +1,12 @@
 import { useEditor } from "@/context/art-editor-context";
 import { hexToRGB, hslToHex, mapRange, normalizeMousePosition, rgbToHsl } from "@/utils/utility";
 import { useEffect, useRef, useState } from "react";
+import { useMouseTracker } from "@/hooks/hooks";
 
 export default function EditorHuePicker() {
-    const brightness = 0;
-
     const hueCanvas = useRef<HTMLCanvasElement>(null);
     const [pickerPosition, setPickerPosition] = useState({ x: 0, y: 0 });
-    const [mouseDown, setMouseDown] = useState(false);
-    const { currentColor, setCurrentColor } = useEditor();
+    const { currentColor, setCurrentColor, colorBrightness } = useEditor();
     const [isColorChanging, setIsColorChanging] = useState(false);
 
     const renderColorGradient = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
@@ -35,54 +33,16 @@ export default function EditorHuePicker() {
 
         context.shadowBlur = 0;
         context.fillStyle = 'black';
-        context.globalAlpha = brightness;
+        context.globalAlpha = colorBrightness;
         context.fillRect(0, 0, canvas.width, canvas.height);
     };
 
-    const onMouseDown = ({ clientX, clientY }: { clientX: number, clientY: number }) => {
-        const canvas = hueCanvas.current;
-        if (!canvas) return;
-
-        let [x, y] = normalizeMousePosition(clientX, clientY, canvas);
-
-        if (x >= 0 && y >= 0 && x < canvas.width && y < canvas.height) {
-            const clampedX = Math.max(0, Math.min(x, canvas.width));
-            const clampedY = Math.max(0, Math.min(y, canvas.height));
-
-            setPickerPosition({ x: clampedX, y: clampedY });
-        }
-        setMouseDown(true);
-        setIsColorChanging(true);
-    };
-
-    const onMouseUp = () => { 
-        setMouseDown(false); 
-        setIsColorChanging(false);
-    };
-
-    const onMouseMove = ({ clientX, clientY }: { clientX: number, clientY: number }) => {
-        const canvas = hueCanvas.current;
-        if (!canvas) return;
-
-        let [x, y] = normalizeMousePosition(clientX, clientY, canvas);
-
-        if (mouseDown) {
-            const clampedX = Math.max(0, Math.min(x, canvas.width));
-            const clampedY = Math.max(0, Math.min(y, canvas.height));
-
-            const position = { x: clampedX, y: clampedY };
-            setPickerPosition(position);
-            setCurrentColor(getHueAtPosition(position));
-        }
-    };
-
-    const getHueAtPosition = (position: { x: number, y: number }) => {
+    const getHueAtPosition = (x: number, y: number) => {
         const canvas = hueCanvas.current!;
-        const h = position.x / canvas.width;
-        const s = 1;
-        const l = mapRange(position.y / canvas.height, 0, 1, 0.5, 1);
-        return hslToHex(h, s, l);
-    }
+        const h = x / canvas.width;
+        const l = mapRange(y / canvas.height, 0, 1, 0.5, 1);
+        return hslToHex(h, 1, l);
+    };
 
     const getPositionAtHue = (color: string) => {
         const canvas = hueCanvas.current!;
@@ -91,6 +51,20 @@ export default function EditorHuePicker() {
 
         return { x: h * canvas.width, y: (l / 255) * canvas.height };
     }
+
+    useMouseTracker(hueCanvas, {
+        onDown: (x, y) => {
+            setIsColorChanging(true);
+            setPickerPosition({ x, y });
+        },
+        onMove: (x, y) => {
+            setPickerPosition({ x, y });
+            setCurrentColor(getHueAtPosition(x, y));
+        },
+        onUp: () => {
+            setIsColorChanging(false);
+        }
+    });
 
     useEffect(() => {
         const canvas = hueCanvas.current;
@@ -102,43 +76,20 @@ export default function EditorHuePicker() {
         canvas.height = 130;
 
         renderColorGradient(canvas, context);
-
-        const handleMouseMove = (event: MouseEvent) => {
-            if (mouseDown) {
-                onMouseMove(event);
-            }
-        };
-
-        const handleMouseUp = () => {
-            setMouseDown(false);
-            setIsColorChanging(false);
-        };
-
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-
-        return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [mouseDown]);
+    }, [colorBrightness]);
 
     useEffect(() => {
         if (isColorChanging) return;
 
         const position = getPositionAtHue(currentColor);
         setPickerPosition(position);
-    }, [currentColor, isColorChanging]);
+    }, [currentColor]);
 
     return (
         <div className="w-[320px] h-[130px] relative">
-            <canvas
-                onMouseDown={onMouseDown}
-                ref={hueCanvas}
-                className="w-[320px] h-[130px] absolute"
-            />
+            <canvas ref={hueCanvas} className="w-[320px] h-[130px] absolute" />
             <div
-                className="w-2.5 h-2.5 z-40 bg-transparent border border-white rounded-full shadow-md absolute"
+                className="w-2.5 h-2.5 z-40 border border-white rounded-full shadow-md absolute"
                 style={{
                     top: pickerPosition.y - 10 / 2,
                     left: pickerPosition.x - 10 / 2,

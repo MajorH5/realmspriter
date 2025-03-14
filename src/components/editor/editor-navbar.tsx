@@ -4,6 +4,7 @@ import { Icons } from "@/resources/images";
 import { useEditor } from "@/context/art-editor-context";
 import { EditMode } from "@/utils/constants";
 import { useState } from "react";
+import { useHistory } from "@/context/history/history-context";
 
 type NavButton = { title: string, offset: number, onClick: () => void, mode?: EditMode.Type }
 
@@ -11,6 +12,7 @@ export default function EditorNavbar() {
     const { openModal } = useModal();
     const { setEditMode, editMode, clearImage } = useEditor();
     const [menuOpen, setMenuOpen] = useState(false);
+    const { undo, redo } = useHistory();
 
     const getButtonClass = (targetState: EditMode.Type) =>
         `w-full h-full flex flex-col items-center justify-center text-sm ${editMode === targetState ? "bg-[rgba(255,255,255,0.5)]" : ""
@@ -20,14 +22,14 @@ export default function EditorNavbar() {
         { title: "draw", offset: 26, onClick: () => setEditMode(EditMode.DRAW), mode: EditMode.DRAW },
         { title: "erase", offset: 27, onClick: () => setEditMode(EditMode.ERASE), mode: EditMode.ERASE },
         { title: "sample", offset: 28, onClick: () => setEditMode(EditMode.SAMPLE), mode: EditMode.SAMPLE },
-        { title: "undo", offset: 29, onClick: () => { } },
-        { title: "redo", offset: 34, onClick: () => { } },
-        { title: "clear", offset: 9, onClick: clearImage },
+        { title: "undo", offset: 29, onClick: () => undo() },
+        { title: "redo", offset: 34, onClick: () => redo() },
+        { title: "clear", offset: 9, onClick: () => clearImage(true) },
         { title: "menu", offset: 35, onClick: () => setMenuOpen((prev) => !prev) },  // Toggle menu open/close
     ];
 
     const secondaryButtons: NavButton[] = [
-        { title: "share", offset: 30, onClick: () => {} },
+        { title: "share", offset: 30, onClick: () => { } },
         { title: "export", offset: 31, onClick: () => openModal("ExportModal") },
         { title: "save", offset: 32, onClick: () => openModal("SaveModal") },
         { title: "browse", offset: 33, onClick: () => openModal("LoadModal") },

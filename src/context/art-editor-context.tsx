@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode, useMemo } from "react";
 
 import {
   EditMode,
@@ -15,7 +15,7 @@ import {
 } from "@/utils/constants";
 import { hexToRGB, RGBtohex } from "@/utils/utility";
 import { ActionType } from "./history/history-types";
-import { useHistory, HistoryType } from "./history/history-context";
+import { useHistory } from "./history/history-context";
 import HistoryActions from "./history/history-actions";
 
 interface ArtEditorContextType {
@@ -23,7 +23,12 @@ interface ArtEditorContextType {
   setEditMode: (editMode: EditMode.Type) => void;
 
   currentColor: string;
-  setCurrentColor: (color: string) => void;
+  setCurrentColor: (color: string, brightness?: number) => void;
+
+  visualColor: string;
+
+  colorBrightness: number;
+  setColorBrightness: (colorBrightness: number) => void;
 
   colorHistory: string[];
   addColorToHistory: (color: string) => void;
@@ -61,6 +66,18 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const [previewImage, setPreviewImage] = useState<{ pixels: Uint8ClampedArray } | null>(null);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [spriteMode, setSpriteMode] = useState<SpriteMode.Type>(SpriteMode.OBJECTS);
+  const [colorBrightness, setColorBrightness] = useState(0);
+  const visualColor = useMemo(() => {
+    let { r, g, b } = hexToRGB(currentColor);
+
+    r *= (1 - colorBrightness);
+    g *= (1 - colorBrightness);
+    b *= (1 - colorBrightness);
+
+    const visualColor = RGBtohex({ r, g, b });
+
+    return visualColor;
+  }, [currentColor, colorBrightness]);
 
   const { updateCurrentAction, closeCurrentAction } = useHistory();
 
@@ -197,11 +214,19 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
       closeCurrentAction();
     }
     setSpriteMode(newMode);
-  }
+  };
+
+  const setCurrentColorWrapper = (currentColor: string, brightness?: number) => {
+
+    if (brightness !== undefined && brightness !== colorBrightness) {
+      setColorBrightness(brightness);
+    }
+    setCurrentColor(currentColor);
+  };
 
   const editorContext = {
     editMode, setEditMode,
-    currentColor, setCurrentColor,
+    currentColor, setCurrentColor: setCurrentColorWrapper,
     colorHistory,
     addColorToHistory,
     removeColorFromHistory,
@@ -212,7 +237,9 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     clearImage,
     zoomLevel, setZoomLevel: safeSetZoomLevel,
     zoomIn, zoomOut,
-    spriteMode, setSpriteMode: setSpriteModeWrapper
+    spriteMode, setSpriteMode: setSpriteModeWrapper,
+    colorBrightness, setColorBrightness,
+    visualColor
   };
 
   return (

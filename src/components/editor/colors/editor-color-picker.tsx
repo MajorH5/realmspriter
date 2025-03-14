@@ -2,16 +2,15 @@ import { useEditor } from "@/context/art-editor-context";
 import { useEffect, useRef, useState } from "react";
 
 export default function EditorColorPicker() {
-    const { currentColor, setCurrentColor, colorHistory } = useEditor();
+    const { currentColor, visualColor, setCurrentColor, colorHistory, colorBrightness } = useEditor();
     const inputColorRef = useRef<HTMLInputElement | null>(null);
 
     const updateColor = (targetColor: string) => {
         if (targetColor.length >= 6) {
             const hex = `#${targetColor}`;
 
-            console.log(targetColor, hex, /#[0-9a-fA-F]{6}/.test(hex))
             if (/#[0-9a-fA-F]{6}/.test(hex)) {
-                setCurrentColor(hex);
+                setCurrentColor(hex, 0);
             }
         }
     };
@@ -25,8 +24,8 @@ export default function EditorColorPicker() {
         if (inputColor === null) return;
 
         inputColor.value = currentColor.slice(1);
-    }, [currentColor])
-
+    }, [currentColor]);
+    
     return (
         <div className="flex flex-col space-y-3 items-center">
             <div className="flex flex-wrap justify-center items-center max-w-[180px] gap-2">
@@ -42,7 +41,7 @@ export default function EditorColorPicker() {
                                     : "",
                             backgroundColor: color,
                         }}
-                        onClick={() => setCurrentColor(color)}
+                        onClick={() => setCurrentColor(color, 0)}
                     />
                 ))}
             </div>
@@ -60,7 +59,7 @@ export default function EditorColorPicker() {
                 className="w-[180px] h-[25px] border-2 border-white"
                 style={{
                     boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
-                    backgroundColor: currentColor,
+                    backgroundColor: visualColor,
                 }}
             />
         </div>

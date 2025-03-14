@@ -14,6 +14,7 @@ import EditorNavbar from "./editor-navbar";
 import { useEditor } from "@/context/art-editor-context";
 import EditorColorGrid from "./colors/editor-color-grid";
 import EditorHuePicker from "./colors/editor-hue-picker";
+import EditorBrightnessSlider from "./colors/editor-brightness-slider";
 
 type ArtEditorProps = {
     className?: string
@@ -65,7 +66,7 @@ export default function ArtEditor({
                         <EditorCanvas />
                         <EditorPreview />
                     </div>
-                    <div className="hidden sm:flex flex-row absolute left-1/2 translate-x-[-50%] bottom-3 z-40 items-center gap-x-2">
+                    <div className="hidden sm:flex flex-row absolute left-1/2 translate-x-[-50%] bottom-3 z-40 items-center gap-x-3">
                         <EditorColorPicker />
                         <EditorColorGrid baseColors={[
                             '#000000', '#1172CB', '#008279',
@@ -78,8 +79,9 @@ export default function ArtEditor({
                             '#303E45', '#6A0A31'
                         ]} />
                         <EditorHuePicker />
+                        <EditorBrightnessSlider />
                     </div>
-                    <p className="absolute bottom-1 right-2 font-myriadpro text-[rgba(255,255,255,0.25)]" style={{ zIndex: 100 }}>v2.0.0</p>
+                    <p className="absolute bottom-0 right-1 font-myriadpro text-[rgba(255,255,255,0.20)] text-xs" style={{ zIndex: 100 }}>v{process.env.APP_VERSION}</p>
                 </>
             )}
             <ScrollingBackground scale={4} image={RealmTrees} />

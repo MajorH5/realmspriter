@@ -44,7 +44,7 @@ export default function EditorColorGrid({ baseColors }: { baseColors: string[] }
                                 : "",
                         backgroundColor: color,
                     }}
-                    onClick={() => setCurrentColor(color)}
+                    onClick={() => setCurrentColor(color, 0)}
                 />
             )}
         </div>

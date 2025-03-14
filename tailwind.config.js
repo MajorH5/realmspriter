@@ -14,7 +14,7 @@ module.exports = {
       },
 
       screens: {
-        'sm': { raw: '(min-width: 640px) and (min-height: 700px)' },
+        'sm': { raw: '(min-width: 880px) and (min-height: 700px)' },
       },
     },
   },
