@@ -168,7 +168,6 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
         to: null,
         editorContext
       });
-      closeCurrentAction();
     }
     setImage({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
     setPreviewImage(null);

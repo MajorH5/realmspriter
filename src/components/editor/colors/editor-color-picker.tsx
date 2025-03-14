@@ -8,7 +8,7 @@ export default function EditorColorPicker() {
     const updateColor = (targetColor: string) => {
         if (targetColor.length >= 6) {
             const hex = `#${targetColor}`;
-            
+
             console.log(targetColor, hex, /#[0-9a-fA-F]{6}/.test(hex))
             if (/#[0-9a-fA-F]{6}/.test(hex)) {
                 setCurrentColor(hex);
@@ -23,12 +23,12 @@ export default function EditorColorPicker() {
     useEffect(() => {
         const { current: inputColor } = inputColorRef;
         if (inputColor === null) return;
-        
-        inputColor.value = currentColor.slice(1);        
+
+        inputColor.value = currentColor.slice(1);
     }, [currentColor])
 
     return (
-        <div className="hidden sm:flex absolute left-1/2 translate-x-[-50%] bottom-3 flex-col justify-center items-center space-y-3 z-40">
+        <div className="flex flex-col space-y-3 items-center">
             <div className="flex flex-wrap justify-center items-center max-w-[180px] gap-2">
                 {colorHistory.map((color) => (
                     <button
@@ -60,7 +60,7 @@ export default function EditorColorPicker() {
                 className="w-[180px] h-[25px] border-2 border-white"
                 style={{
                     boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
-                    backgroundColor: currentColor, 
+                    backgroundColor: currentColor,
                 }}
             />
         </div>

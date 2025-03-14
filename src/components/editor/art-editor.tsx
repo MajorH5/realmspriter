@@ -12,6 +12,8 @@ import EditorCanvas from "./editor-canvas";
 import EditorPreview from "./editor-preview";
 import EditorNavbar from "./editor-navbar";
 import { useEditor } from "@/context/art-editor-context";
+import EditorColorGrid from "./colors/editor-color-grid";
+import EditorHuePicker from "./colors/editor-hue-picker";
 
 type ArtEditorProps = {
     className?: string
@@ -63,7 +65,20 @@ export default function ArtEditor({
                         <EditorCanvas />
                         <EditorPreview />
                     </div>
-                    <EditorColorPicker />
+                    <div className="hidden sm:flex flex-row absolute left-1/2 translate-x-[-50%] bottom-3 z-40 items-center gap-x-2">
+                        <EditorColorPicker />
+                        <EditorColorGrid baseColors={[
+                            '#000000', '#1172CB', '#008279',
+                            '#027925', '#597E00', '#877800',
+                            '#885A00', '#772800'
+                        ]} />
+                        <EditorColorGrid baseColors={[
+                            '#7F2B19', '#267725', '#104B7E',
+                            '#996B05', '#4E1360', '#7F751D',
+                            '#303E45', '#6A0A31'
+                        ]} />
+                        <EditorHuePicker />
+                    </div>
                     <p className="absolute bottom-1 right-2 font-myriadpro text-[rgba(255,255,255,0.25)]" style={{ zIndex: 100 }}>v2.0.0</p>
                 </>
             )}

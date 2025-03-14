@@ -13,6 +13,7 @@ import {
 import { BorderButton } from "../generic/rotmg-button";
 import { ActionType } from "@/context/history/history-types";
 import { useHistory } from "@/context/history/history-context";
+import { normalizeMousePosition } from "@/utils/utility";
 
 const MAX_EDITOR_WIDTH = 400;
 
@@ -124,22 +125,6 @@ export default function EditorCanvas() {
 
         reRenderGrid(gridCanvas);
     }, [artSize, cellSize]);
-
-    const normalizeMousePosition = (
-        x: number,
-        y: number,
-        canvas: HTMLCanvasElement
-    ): [number, number] => {
-        const rect = canvas.getBoundingClientRect();
-
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-
-        const mouseX = (x - rect.left) * scaleX;
-        const mouseY = (y - rect.top) * scaleY;
-
-        return [mouseX, mouseY];
-    };
 
     const onMouseMove = ({ clientX, clientY }: { clientX: number, clientY: number }) => {
         const canvas = mainCanvasRef.current;
