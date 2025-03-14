@@ -33,7 +33,7 @@ export default function EditorTopBar() {
         const dataset = event.target.selectedOptions[0].dataset;
         const spriteMode = dataset.mode as SpriteMode.Type;
         
-        setSpriteMode(spriteMode);
+        setSpriteMode(spriteMode, true);
     };
 
     return (

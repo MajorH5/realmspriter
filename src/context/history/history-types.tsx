@@ -1,7 +1,8 @@
 export enum ActionType {
     PIXEL_EDIT,
     CANVAS_WIPE,
-    SPRITE_RESIZE
+    SPRITE_RESIZE,
+    SPRITE_MODE
 };
 
 export type ActionObject = {
