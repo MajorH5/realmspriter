@@ -37,8 +37,8 @@ interface ArtEditorContextType {
   artSize: { x: number, y: number };
   setArtSize: (artSize: { x: number, y: number }, storeInHistory?: boolean) => void;
 
-  spriteMode: SpriteMode.Type;
-  setSpriteMode: (spriteMode: SpriteMode.Type, storeInHistory?: boolean) => void;
+  spriteMode: SpriteMode;
+  setSpriteMode: (spriteMode: SpriteMode, storeInHistory?: boolean) => void;
 
   zoomLevel: number;
   setZoomLevel: (zoomLevel: number) => void;
@@ -65,7 +65,7 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const [image, setImage] = useState({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
   const [previewImage, setPreviewImage] = useState<{ pixels: Uint8ClampedArray } | null>(null);
   const [zoomLevel, setZoomLevel] = useState(100);
-  const [spriteMode, setSpriteMode] = useState<SpriteMode.Type>(SpriteMode.OBJECTS);
+  const [spriteMode, setSpriteMode] = useState<SpriteMode>(SpriteMode.OBJECTS);
   const [colorBrightness, setColorBrightness] = useState(0);
   const visualColor = useMemo(() => {
     let { r, g, b } = hexToRGB(currentColor);
@@ -208,7 +208,7 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     setImage(image);
   };
 
-  const setSpriteModeWrapper = (newMode: SpriteMode.Type, storeInHistory: boolean = false) => {
+  const setSpriteModeWrapper = (newMode: SpriteMode, storeInHistory: boolean = false) => {
     if (storeInHistory) {
       updateCurrentAction(ActionType.SPRITE_MODE, { from: spriteMode, to: newMode, editorContext });
       closeCurrentAction();
@@ -329,8 +329,8 @@ HistoryActions.registerActionHandler(ActionType.SPRITE_RESIZE, (actionData: Spri
 
 
 type SpriteModeData = {
-  from: SpriteMode.Type,
-  to: SpriteMode.Type,
+  from: SpriteMode,
+  to: SpriteMode,
   editorContext: ArtEditorContextType
 };
 HistoryActions.registerActionHandler(ActionType.SPRITE_MODE, (actionData: SpriteModeData[]) => {

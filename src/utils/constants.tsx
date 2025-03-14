@@ -1,8 +1,8 @@
-export namespace SpriteMode {
-    export type Type = "Objects" | "Characters" | "Textiles";
-    export const OBJECTS = "Objects";
-    export const CHARACTERS = "Characters";
-    export const TEXTILES = "Textiles";
+export enum SpriteMode {
+    OBJECTS = "Objects",
+    CHARACTERS = "Characters",
+    TEXTILES = "Textiles",
+    ANIMATED = "Animated"
 };
 
 export namespace SpriteSize {

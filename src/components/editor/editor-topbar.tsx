@@ -8,13 +8,13 @@ import { useAuth } from "@/context/auth-context";
 
 import ImageButton from "../generic/image-button";
 import { TextButton } from "../generic/rotmg-button";
-import { SpriteMode, SpriteSize } from "@/utils/constants";
+import { SpriteMode } from "@/utils/constants";
 import { useEditor } from "@/context/art-editor-context";
 import { ChangeEvent, useMemo } from "react";
 
 export default function EditorTopBar() {
     const { userMusicEnabled, muteMusic, unmuteMusic } = useAudioPlayer();
-    const { activeModal, toggleModal, openModal } = useModal();
+    const { activeModal, openModal } = useModal();
     const { user, logout } = useAuth();
     const { artSize, spriteMode, setArtSize, setSpriteMode } = useEditor();
     const formattedArtSize = useMemo(() => `${artSize.x} x ${artSize.y}`, [artSize]);
@@ -31,7 +31,7 @@ export default function EditorTopBar() {
 
     const onSpriteModeChanged = (event: ChangeEvent<HTMLSelectElement>) => {
         const dataset = event.target.selectedOptions[0].dataset;
-        const spriteMode = dataset.mode as SpriteMode.Type;
+        const spriteMode = dataset.mode as SpriteMode;
         
         setSpriteMode(spriteMode, true);
     };
@@ -123,9 +123,9 @@ export default function EditorTopBar() {
                     <label htmlFor="mode" className="text-[#dddddd] text-lg"><b>Mode:</b></label>
                     <div className="w-fit h-fit border-[2px] rounded-sm border-[#696A68] text-lg">
                         <select name="mode" className="rotmg-dropdown" value={spriteMode} onChange={onSpriteModeChanged}>
-                            <option data-mode={SpriteMode.OBJECTS}>Objects</option>
-                            <option data-mode={SpriteMode.CHARACTERS}>Characters</option>
-                            <option data-mode={SpriteMode.TEXTILES}>Textiles</option>
+                            {Object.values(SpriteMode).map((mode) => 
+                                <option data-mode={mode}>{mode}</option>
+                            )}
                         </select>
                     </div>
 

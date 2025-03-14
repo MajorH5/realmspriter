@@ -20,7 +20,7 @@ const MAX_EDITOR_WIDTH = 400;
 export default function EditorCanvas() {
     const {
         artSize,
-        currentColor,
+        visualColor,
         getPixel,
         setPixel,
         image,
@@ -53,7 +53,7 @@ export default function EditorCanvas() {
     const interactWithPixel = (x: number, y: number) => {
         switch (editMode) {
             case EditMode.DRAW:
-                setPixel(x, y, currentColor, true);
+                setPixel(x, y, visualColor, true);
                 break;
             case EditMode.ERASE:
                 setPixel(x, y, null, true);
@@ -62,7 +62,7 @@ export default function EditorCanvas() {
                 const color = getPixel(x, y);
 
                 if (color !== null) {
-                    setCurrentColor(color);
+                    setCurrentColor(color, 0);
                 }
                 break;
         }
@@ -196,7 +196,7 @@ export default function EditorCanvas() {
 
             switch (editMode) {
                 case EditMode.DRAW:
-                    const { r, g, b } = hexToRGB(currentColor);
+                    const { r, g, b } = hexToRGB(visualColor);
 
                     pixels[index + 0] = r;
                     pixels[index + 1] = g;

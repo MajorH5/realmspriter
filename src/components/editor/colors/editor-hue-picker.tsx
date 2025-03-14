@@ -56,6 +56,7 @@ export default function EditorHuePicker() {
         onDown: (x, y) => {
             setIsColorChanging(true);
             setPickerPosition({ x, y });
+            setCurrentColor(getHueAtPosition(x, y));
         },
         onMove: (x, y) => {
             setPickerPosition({ x, y });
