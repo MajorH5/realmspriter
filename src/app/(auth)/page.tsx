@@ -2,6 +2,7 @@ import ArtEditor, { Loading } from "@/components/editor/art-editor";
 import Footer from "@/components/generic/footer";
 import { ArtEditorProvider } from "@/context/art-editor-context";
 import { AudioPlayerProvider } from "@/context/audio-player-context";
+import { HistoryProvider } from "@/context/history/history-context";
 import { ModalProvider } from "@/context/modal-context";
 import { Suspense } from "react";
 
@@ -10,7 +11,7 @@ export default function RealmSpriter() {
         <div
             className="flex flex-col min-h-dvh overflow-x-hidden bg-black text-white touch-none"
             style={{
-                
+
                 WebkitTouchCallout: "none",
                 WebkitUserSelect: "none",
                 MozUserSelect: "none",
@@ -20,13 +21,15 @@ export default function RealmSpriter() {
         >
             <div className="flex items-center justify-center">
                 <AudioPlayerProvider>
-                    <ArtEditorProvider>
-                        <ModalProvider>
-                            <Suspense fallback={<Loading />}>
-                                <ArtEditor />
-                            </Suspense>
-                        </ModalProvider>
-                    </ArtEditorProvider>
+                    <HistoryProvider>
+                        <ArtEditorProvider>
+                            <ModalProvider>
+                                <Suspense fallback={<Loading />}>
+                                    <ArtEditor />
+                                </Suspense>
+                            </ModalProvider>
+                        </ArtEditorProvider>
+                    </HistoryProvider>
                 </AudioPlayerProvider>
             </div>
 

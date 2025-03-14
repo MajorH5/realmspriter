@@ -16,7 +16,8 @@ export default function EditorTopBar() {
     const { userMusicEnabled, muteMusic, unmuteMusic } = useAudioPlayer();
     const { activeModal, toggleModal, openModal } = useModal();
     const { user, logout } = useAuth();
-    const { artSize, setArtSize } = useEditor();
+    const { artSize, spriteMode, setArtSize, setSpriteMode } = useEditor();
+    const formattedArtSize = useMemo(() => `${artSize.x} x ${artSize.y}`, [artSize]);
 
     const isLoggedIn = useMemo(() => user !== null, [user]);
     const shouldRenderToolbarButtons = !activeModal;
@@ -25,7 +26,14 @@ export default function EditorTopBar() {
         const dataset = event.target.selectedOptions[0].dataset;
         const selectedValue = { x: Number(dataset.width), y: Number(dataset.height) };
 
-        setArtSize(selectedValue as { x: number, y: number });
+        setArtSize(selectedValue as { x: number, y: number }, true);
+    };
+
+    const onSpriteModeChanged = (event: ChangeEvent<HTMLSelectElement>) => {
+        const dataset = event.target.selectedOptions[0].dataset;
+        const spriteMode = dataset.mode as SpriteMode.Type;
+        
+        setSpriteMode(spriteMode);
     };
 
     return (
@@ -114,16 +122,16 @@ export default function EditorTopBar() {
                 <div className="hidden sm:flex flex-row justify-center items-center gap-4 pl-12 mt-2 z-30 font-myriadpro">
                     <label htmlFor="mode" className="text-[#dddddd] text-lg"><b>Mode:</b></label>
                     <div className="w-fit h-fit border-[2px] rounded-sm border-[#696A68] text-lg">
-                        <select name="mode" className="rotmg-dropdown" defaultValue={SpriteMode.OBJECTS}>
-                            <option value={SpriteMode.OBJECTS}>Objects</option>
-                            <option value={SpriteMode.CHARACTERS}>Characters</option>
-                            <option value={SpriteMode.TEXTILES}>Textiles</option>
+                        <select name="mode" className="rotmg-dropdown" value={spriteMode} onChange={onSpriteModeChanged}>
+                            <option data-mode={SpriteMode.OBJECTS}>Objects</option>
+                            <option data-mode={SpriteMode.CHARACTERS}>Characters</option>
+                            <option data-mode={SpriteMode.TEXTILES}>Textiles</option>
                         </select>
                     </div>
 
                     <label htmlFor="size" className="text-[#dddddd] text-lg"><b>Size:</b></label>
                     <div className="w-fit h-fit border-[2px] rounded-sm border-[#696A68] text-lg">
-                        <select name="mode" className="rotmg-dropdown" defaultValue="8x8" onChange={onSpriteSizeChanged}>
+                        <select name="mode" className="rotmg-dropdown" value={formattedArtSize} onChange={onSpriteSizeChanged}>
                             <option data-width="8" data-height="8">8 x 8</option>
                             <option data-width="16" data-height="8">16 x 8</option>
                             <option data-width="16" data-height="16">16 x 16</option>

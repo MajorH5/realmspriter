@@ -2,6 +2,7 @@ import { useEditor } from "@/context/art-editor-context";
 import { BorderButton } from "../generic/rotmg-button";
 import { EditMode } from "@/utils/constants";
 import { useModal } from "@/context/modal-context";
+import { useHistory } from "@/context/history/history-context";
 
 export default function EditorSideButtons({
     className
@@ -10,6 +11,7 @@ export default function EditorSideButtons({
 }) {
     const { editMode, setEditMode, clearImage } = useEditor();
     const { openModal } = useModal();
+    const { undo, redo } = useHistory();
 
     const getSelectStyle = (targetState: EditMode.Type) => {
         return editMode === targetState ? "!bg-[rgba(255,255,255,0.5)]" : "";
@@ -36,9 +38,23 @@ export default function EditorSideButtons({
                     S(A)mple
                 </BorderButton>
 
-                <BorderButton className="py-[2px] pl-3 pr-6">(U)ndo</BorderButton>
-                <BorderButton className="py-[2px] pl-3 pr-6">(R)edo</BorderButton>
-                <BorderButton onClick={clearImage} className="py-[2px] pl-3 pr-6">(C)lear</BorderButton>
+                <BorderButton
+                    onClick={() => undo()}
+                    className="py-[2px] pl-3 pr-6">
+                    (U)ndo
+                </BorderButton>
+
+                <BorderButton
+                    onClick={() => {redo()}}
+                    className="py-[2px] pl-3 pr-6">
+                    (R)edo
+                </BorderButton>
+
+                <BorderButton
+                    onClick={() => clearImage(true)}
+                    className="py-[2px] pl-3 pr-6">
+                    (C)lear
+                </BorderButton>
             </div>
             <div className="flex flex-col space-y-2">
                 <BorderButton onClick={() => openModal("LoadModal")} className="py-[2px] pl-3 pr-6">(L)oad</BorderButton>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 import {
   EditMode,
@@ -10,9 +10,13 @@ import {
   MAX_ART_SIZE,
   MIN_ZOOM_LEVEL,
   MAX_ZOOM_LEVEL,
-  ZOOM_LEVEL_INCREMENT
+  ZOOM_LEVEL_INCREMENT,
+  SpriteMode
 } from "@/utils/constants";
 import { hexToRGB, RGBtohex } from "@/utils/utility";
+import { ActionType } from "./history/history-types";
+import { useHistory, HistoryType } from "./history/history-context";
+import HistoryActions from "./history/history-actions";
 
 interface ArtEditorContextType {
   editMode: EditMode.Type;
@@ -26,7 +30,10 @@ interface ArtEditorContextType {
   removeColorFromHistory: (color: string) => void;
 
   artSize: { x: number, y: number };
-  setArtSize: (artSize: { x: number, y: number }) => void;
+  setArtSize: (artSize: { x: number, y: number }, storeInHistory?: boolean) => void;
+
+  spriteMode: SpriteMode.Type;
+  setSpriteMode: (spriteMode: SpriteMode.Type) => void;
 
   zoomLevel: number;
   setZoomLevel: (zoomLevel: number) => void;
@@ -34,11 +41,12 @@ interface ArtEditorContextType {
   zoomOut: () => void;
 
   image: { pixels: Uint8ClampedArray };
+  setImage: (image: { pixels: Uint8ClampedArray }) => void;
   previewImage: { pixels: Uint8ClampedArray } | null;
   setPreviewImage: (image: { pixels: Uint8ClampedArray } | null) => void;
 
-  clearImage: () => void;
-  setPixel: (x: number, y: number, color: string | null) => void;
+  clearImage: (storeInHistory?: boolean) => void;
+  setPixel: (x: number, y: number, color: string | null, storeInHistory?: boolean) => void;
   getPixel: (x: number, y: number) => string | null;
 };
 
@@ -52,6 +60,9 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const [image, setImage] = useState({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
   const [previewImage, setPreviewImage] = useState<{ pixels: Uint8ClampedArray } | null>(null);
   const [zoomLevel, setZoomLevel] = useState(100);
+  const [spriteMode, setSpriteMode] = useState<SpriteMode.Type>(SpriteMode.OBJECTS);
+
+  const { updateCurrentAction, closeCurrentAction } = useHistory();
 
   const addColorToHistory = (color: string) => {
     const index = colorHistory.findIndex((i) => color === i);
@@ -77,19 +88,28 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     setColorHistory(arr);
   };
 
-  const safeSetArtSize = (size: { x: number, y: number }) => {
+  const safeSetArtSize = (size: { x: number, y: number }, storeInHistory: boolean = false) => {
     if (size.x <= 0) size.x = 1;
     if (size.y <= 0) size.y = 1;
     if (size.x > MAX_ART_SIZE.x) size.x = MAX_ART_SIZE.x;
     if (size.y > MAX_ART_SIZE.y) size.y = MAX_ART_SIZE.y;
+
+    if (storeInHistory) {
+      updateCurrentAction(ActionType.SPRITE_RESIZE, {
+        from: [artSize, { pixels: new Uint8ClampedArray(image.pixels) }],
+        to: [size, null], editorContext
+      });
+      closeCurrentAction();
+    }
 
     // resize pixels
     setImage({ pixels: new Uint8ClampedArray(size.x * size.y * 4) });
     setArtSize(size);
   };
 
-  const setPixel = (x: number, y: number, color: string | null) => {
-    if (getPixel(x, y) === color) return;
+  const setPixel = (x: number, y: number, color: string | null, storeInHistory: boolean = false) => {
+    const oldColor = getPixel(x, y);
+    if (oldColor === color) return;
 
     const index = (y * artSize.x + x) * 4;
 
@@ -113,6 +133,13 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
 
     // trying to avoid large repeated array copying
     setImage({ pixels: image.pixels });
+
+    if (storeInHistory) {
+      // update history
+      updateCurrentAction(ActionType.PIXEL_EDIT, {
+        x, y, color: oldColor, editorContext
+      });
+    }
   };
 
   const getPixel = (x: number, y: number): string | null => {
@@ -134,7 +161,15 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const clearImage = () => {
+  const clearImage = (storeInHistory: boolean = false) => {
+    if (storeInHistory) {
+      updateCurrentAction(ActionType.CANVAS_WIPE, {
+        from: { pixels: new Uint8ClampedArray(image.pixels) },
+        to: null,
+        editorContext
+      });
+      closeCurrentAction();
+    }
     setImage({ pixels: new Uint8ClampedArray(artSize.x * artSize.y * 4) });
     setPreviewImage(null);
   };
@@ -152,20 +187,29 @@ export const ArtEditorProvider = ({ children }: { children: ReactNode }) => {
   const zoomIn = () => safeSetZoomLevel(zoomLevel + ZOOM_LEVEL_INCREMENT);
   const zoomOut = () => safeSetZoomLevel(zoomLevel - ZOOM_LEVEL_INCREMENT);
 
+  const setImageWrapper = (image: { pixels: Uint8ClampedArray }) => {
+    // @ts-ignore
+    setImage(image);
+  };
+
+  const editorContext = {
+    editMode, setEditMode,
+    currentColor, setCurrentColor,
+    colorHistory,
+    addColorToHistory,
+    removeColorFromHistory,
+    artSize, setArtSize: safeSetArtSize,
+    image, setImage: setImageWrapper,
+    setPixel, getPixel,
+    previewImage, setPreviewImage,
+    clearImage,
+    zoomLevel, setZoomLevel: safeSetZoomLevel,
+    zoomIn, zoomOut,
+    spriteMode, setSpriteMode
+  };
+
   return (
-    <ArtEditorContext.Provider value={{
-      editMode, setEditMode,
-      currentColor, setCurrentColor,
-      colorHistory,
-      addColorToHistory,
-      removeColorFromHistory,
-      artSize, setArtSize: safeSetArtSize,
-      image, setPixel, getPixel,
-      previewImage, setPreviewImage,
-      clearImage,
-      zoomLevel, setZoomLevel: safeSetZoomLevel,
-      zoomIn, zoomOut
-    }}>
+    <ArtEditorContext.Provider value={editorContext}>
       {children}
     </ArtEditorContext.Provider>
   );
@@ -180,3 +224,71 @@ export const useEditor = () => {
 
   return context;
 };
+
+type PixelEditData = { x: number, y: number, color: string | null, editorContext: ArtEditorContextType };
+HistoryActions.registerActionHandler(ActionType.PIXEL_EDIT, (actionData: PixelEditData[]) => {
+  for (let i = 0; i < actionData.length; i++) {
+    const pixelEvent = actionData[i];
+    const { setPixel, getPixel } = pixelEvent.editorContext;
+
+    const oldColor = getPixel(pixelEvent.x, pixelEvent.y);
+    const newColor = pixelEvent.color;
+
+    setPixel(pixelEvent.x, pixelEvent.y, newColor);
+
+    pixelEvent.color = oldColor;
+  }
+
+  return {
+    actionType: ActionType.PIXEL_EDIT,
+    actionData: actionData
+  };
+});
+
+type CanvasWipeData = {
+  from: { pixels: Uint8ClampedArray } | null,
+  to: { pixels: Uint8ClampedArray } | null,
+  editorContext: ArtEditorContextType
+};
+HistoryActions.registerActionHandler(ActionType.CANVAS_WIPE, (actionData: CanvasWipeData[]) => {
+  const [wipeData] = actionData;
+  const { from, to, editorContext } = wipeData;
+
+  if (from === null) {
+    editorContext.clearImage();
+  } else {
+    editorContext.setImage(from);
+  }
+
+  wipeData.from = to, wipeData.to = from;
+
+  return {
+    actionType: ActionType.CANVAS_WIPE,
+    actionData: actionData
+  };
+});
+
+type SpriteResizeData = {
+  from: [{ x: number, y: number }, { pixels: Uint8ClampedArray } | null],
+  to: [{ x: number, y: number }, { pixels: Uint8ClampedArray } | null],
+  editorContext: ArtEditorContextType
+};
+HistoryActions.registerActionHandler(ActionType.SPRITE_RESIZE, (actionData: SpriteResizeData[]) => {
+  const [resizeData] = actionData;
+  const { from, to, editorContext } = resizeData;
+
+  const [newSize, newImage] = from;
+
+  editorContext.setArtSize(newSize);
+
+  if (newImage !== null) {
+    editorContext.setImage(newImage);
+  }
+
+  resizeData.from = to, resizeData.to = from;
+
+  return {
+    actionType: ActionType.SPRITE_RESIZE,
+    actionData: actionData
+  };
+});

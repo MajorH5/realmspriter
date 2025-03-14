@@ -1,6 +1,6 @@
 import { useEditor } from "@/context/art-editor-context";
 import { TransparentTiles } from "@/resources/images";
-import { EditMode } from "@/utils/constants";
+import { EditMode, SpriteMode } from "@/utils/constants";
 import { hexToRGB, RGBtohex } from "@/utils/utility";
 import {
     useEffect,
@@ -11,6 +11,8 @@ import {
     TouchEvent
 } from "react";
 import { BorderButton } from "../generic/rotmg-button";
+import { ActionType } from "@/context/history/history-types";
+import { useHistory } from "@/context/history/history-context";
 
 const MAX_EDITOR_WIDTH = 400;
 
@@ -23,7 +25,8 @@ export default function EditorCanvas() {
         image,
         editMode,
         setCurrentColor,
-        setPreviewImage
+        setPreviewImage,
+        spriteMode
     } = useEditor();
     const [mouseCell, setMouseCell] = useState({ x: 0, y: 0 });
     const [mouseDown, setMouseDown] = useState(false);
@@ -32,6 +35,8 @@ export default function EditorCanvas() {
     // Refs for the canvas elements
     const mainCanvasRef = useRef<HTMLCanvasElement>(null);
     const gridCanvasRef = useRef<HTMLCanvasElement>(null);
+
+    const { closeCurrentAction } = useHistory();
 
     const cellSize = useMemo(() => {
         const { x: sizeX, y: sizeY } = artSize;
@@ -47,10 +52,10 @@ export default function EditorCanvas() {
     const interactWithPixel = (x: number, y: number) => {
         switch (editMode) {
             case EditMode.DRAW:
-                setPixel(x, y, currentColor);
+                setPixel(x, y, currentColor, true);
                 break;
             case EditMode.ERASE:
-                setPixel(x, y, null);
+                setPixel(x, y, null, true);
                 break;
             case EditMode.SAMPLE:
                 const color = getPixel(x, y);
@@ -181,6 +186,7 @@ export default function EditorCanvas() {
 
     const onMouseUp = () => {
         setMouseDown(false);
+        closeCurrentAction(ActionType.PIXEL_EDIT);
     };
 
     const onMouseLeave = () => {
@@ -253,13 +259,15 @@ export default function EditorCanvas() {
 
     return (
         <div className="grid relative">
-            <div className="absolute flex gap-1 justify-center w-full h-[30px] -top-10 whitespace-nowrap">
-                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Stand</BorderButton>
-                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Walk 1</BorderButton>
-                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Walk 2</BorderButton>
-                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Attack 1</BorderButton>
-                <BorderButton className="h-full w-[70px] text-[1rem] text-center">Attack 2</BorderButton>
-            </div>
+            {spriteMode === SpriteMode.CHARACTERS &&
+                <div className="absolute flex gap-1 justify-center w-full h-[30px] -top-10 whitespace-nowrap">
+                    <BorderButton className="h-full w-[70px] text-[0.98rem] text-center">Stand</BorderButton>
+                    <BorderButton className="h-full w-[70px] text-[0.98rem] text-center">Walk 1</BorderButton>
+                    <BorderButton className="h-full w-[70px] text-[0.98rem] text-center">Walk 2</BorderButton>
+                    <BorderButton className="h-full w-[70px] text-[0.98rem] text-center">Attack 1</BorderButton>
+                    <BorderButton className="h-full w-[70px] text-[0.98rem] text-center">Attack 2</BorderButton>
+                </div>
+            }
             <canvas
                 className="select-none"
                 ref={mainCanvasRef}
