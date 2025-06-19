@@ -119,6 +119,7 @@ export default function EditorPreview() {
             {spriteMode === SpriteMode.ANIMATED &&
                 <div className="absolute w-full bottom-0 flex items-center justify-center p-4 gap-x-5">
                     <ImageButton
+                        className="absolute left-4"
                         onClick={() => scroll("left")}
                         title={"left"}
                         totalSpritesX={5}
@@ -129,19 +130,26 @@ export default function EditorPreview() {
 
                     <div
                         ref={scrollRef}
-                        className="flex flex-row overflow-x-auto w-full whitespace-nowrap px-0 gap-x-1 bg-[rgba(0,0,0,0.10)]"
+                        className="flex flex-row overflow-x-hidden w-full whitespace-nowrap mx-6 gap-x-1 bg-[rgba(0,0,0,0.10)]"
                     >
-                        {[...".".repeat(20)].map((_, index) => (
-                            <div
+                        {[...([...".".repeat(13)].map((_, i) => i + 1)), "+"].map((symbol, index) => (
+                            <button
                                 key={index}
-                                className="border w-[40px] h-[40px] flex items-center justify-center flex-shrink-0 font-myriadpro"
+                                className={`w-[40px] h-[40px] flex items-center justify-center flex-shrink-0 font-myriadpro 
+                                border text-white
+                                ${symbol === "+"
+                                        ? "bg-[#888] hover:bg-[#aaa] border-white shadow-md"
+                                        : "bg-[#222] hover:bg-[#333] border-gray-300"}`}
+                                onClick={() => symbol === "+" && console.log("Add new frame")}
                             >
-                                {index + 1}
-                            </div>
+                                {symbol}
+                            </button>
+
                         ))}
                     </div>
 
                     <ImageButton
+                        className="absolute right-4"
                         onClick={() => scroll("right")}
                         title={"right"}
                         totalSpritesX={5}

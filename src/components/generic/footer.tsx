@@ -9,7 +9,7 @@ export default function Footer() {
             </p>
             <p
                 className="mt-4 text-xs text-[#666666]"
-            >&copy; 2024 RealmSpriter. All rights reserved.</p>
+            >&copy; 2025 RealmSpriter. All rights reserved.</p>
         </div>
     );
 }

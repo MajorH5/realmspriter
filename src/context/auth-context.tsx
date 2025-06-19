@@ -50,9 +50,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = async (email: string, password: string, captcha: ReCAPTCHA): Promise<LoginResult> => {
         setIsLoggingIn(true);
-        
+
         const token = captcha.getValue() || await captcha.executeAsync();
-        
+
         if (token === null) {
             setIsLoggingIn(false);
 
@@ -82,10 +82,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 return response;
             });
     };
-    
+
     const register = async (email: string, username: string, password: string, captcha: ReCAPTCHA): Promise<APIResponse<User | null>> => {
         setIsSigningUp(true);
-        
+
         const token = captcha.getValue() || await captcha.executeAsync();
 
         if (token === null) {
@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             setIsSigningUp(false);
-            
+
             return result;
         });
     };

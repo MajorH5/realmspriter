@@ -73,12 +73,14 @@ export function useMouseTracker(
         };
 
         canvas.addEventListener("mousedown", handleMouseDown);
+        // @ts-ignore
         document.addEventListener("touchmove", handleTouchMove);
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
-
+        
         return () => {
             canvas.removeEventListener("mousedown", handleMouseDown);
+            // @ts-ignore
             document.removeEventListener("touchmove", handleTouchMove);
             document.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseup", handleMouseUp);

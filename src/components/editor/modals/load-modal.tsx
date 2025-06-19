@@ -6,12 +6,17 @@ import {
     ModalTrigger
 } from "../../generic/modal";
 import { DefaultButton, TextButton } from "@/components/generic/rotmg-button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BorderButton } from "@/components/generic/rotmg-button";
 import ImageButton from "@/components/generic/image-button";
 import { Icons } from "@/resources/images";
+import { RotMGSpriteLoader } from "@/resources/RotMGSpriteLoader/RotMGSpriteLoader";
+import { Object } from "@/resources/RotMGSpriteLoader/object";
+import { useQuery } from "@/resources/query";
+import { Page } from "@/resources/RotMGSpriteLoader/page";
 
-function SpriteCell() {
+function SpriteCell({ object }: { object: Object }) {
+    console.log(object);
     return (
         <div
             className="relative w-[112px] h-[112px] overflow-hidden cursor-pointer hover:bg-[rgba(255,255,255,0.25)]"
@@ -26,24 +31,39 @@ function SpriteCell() {
 
 export default function LoadModal() {
     const [isSearching, setIsSearching] = useState(false);
+    const [page, setPage] = useState<Page | null>(null);
 
-    const [items, setItems] = useState([
-        "", "", "", "",
-        "", "", "", "",
-        "", "", "", "",
-    ]);
+    const loader = new RotMGSpriteLoader(12);
+    const { search } = useQuery(loader);
+
+    if (!loader.isLoaded()) {
+        loader.waitLoad();
+    }
 
     const loadPage = () => {
         if (isSearching) return;
 
-        setItems([]);
+        setPage(null);
         setIsSearching(true);
 
-        setTimeout(() => {
-            setIsSearching(false);
-            setItems(" ".repeat(12).split(""));
-        }, 500 + 3000 * Math.random());
+        RotMGSpriteLoader.preloadAll()
+            .then(() => {
+                return search("All", "Any Type", "oryx");
+            })
+            .then((result) => {
+                
+                const [page, pageNumber] = result;
+                if (page !== undefined) {
+                    setPage(page);
+                } else {
+                    setPage(null);
+                }
+
+                setIsSearching(false);
+            });
     };
+
+    useEffect(() => { loadPage(); }, []);
 
     return (
         <Modal
@@ -126,12 +146,11 @@ export default function LoadModal() {
                     ) :
                     (
                         <div className="w-full h-full flex flex-row gap-x-10 flex-wrap justify-center items-center">
-                            {
-                                items.map(() => <SpriteCell key={Math.random().toString()} />)
+                            {page?.getObjects().map((obj) => <SpriteCell key={Math.random().toString()} object={obj} />)
                             }
                         </div>
                     )
-            }
+                }
             </ModalBody>
 
             <ModalFooter className="w-full">

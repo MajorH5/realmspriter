@@ -78,4 +78,8 @@ export class Page {
 
     return results;
   }
+
+  getObjects (): Object[] {
+    return this.objects;
+  }
 }

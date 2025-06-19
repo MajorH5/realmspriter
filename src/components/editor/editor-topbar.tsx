@@ -123,8 +123,8 @@ export default function EditorTopBar() {
                     <label htmlFor="mode" className="text-[#dddddd] text-lg"><b>Mode:</b></label>
                     <div className="w-fit h-fit border-[2px] rounded-sm border-[#696A68] text-lg">
                         <select name="mode" className="rotmg-dropdown" value={spriteMode} onChange={onSpriteModeChanged}>
-                            {Object.values(SpriteMode).map((mode) => 
-                                <option data-mode={mode}>{mode}</option>
+                            {Object.values(SpriteMode).map((mode, i) => 
+                                <option data-mode={mode} key={i}>{mode}</option>
                             )}
                         </select>
                     </div>
